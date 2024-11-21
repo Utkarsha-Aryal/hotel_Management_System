@@ -19,15 +19,15 @@ class RoomCategory extends Model
 
     public static function saveData($post)
     {
-        
+
         try
         {
 
            $insertArray = [
             'category' => $post['category'],
             'order_number'=> $post['order'],
-            'price'=>$post['price']
-
+            'maximum_occupancy'=>$post['maximum_occupancy'],
+            'bed_type' => $post['bed_type']
             ];
             $insertArray = filterData($insertArray);
             if(!empty($post['image'])){
@@ -46,7 +46,7 @@ class RoomCategory extends Model
                 $insertArray['created_at'] = Carbon::now();
                 if(!RoomCategory::where('id',$post['id'])->insert($insertArray)){
                     throw new Exception("Couldn't Save Records",1);
-                } 
+                }
             }
             return true;
 
@@ -84,12 +84,12 @@ class RoomCategory extends Model
                 $limit = $get['length'];
                 $offset = $get['start'];
             }
-            $query = RoomCategory::selectRaw("(SELECT COUNT(*) FROM room_categories) AS totalrecs, id, category, order_number,image, price")->whereRaw($cond);
+            $query = RoomCategory::selectRaw("(SELECT COUNT(*) FROM room_categories) AS totalrecs, id, category, order_number,image, maximum_occupancy,bed_type")->whereRaw($cond);
 
             if($limit>-1){
                 $result = $query->orderByRAW($orderby)->offset($offset)->limit($limit)->get();
             }else{
-                $result = $query->orderByRaw($orderby)->get(); 
+                $result = $query->orderByRaw($orderby)->get();
             }
             if($result){
                 $ndata = $result;
