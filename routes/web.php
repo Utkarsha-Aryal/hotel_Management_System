@@ -19,6 +19,7 @@ use App\Http\Controllers\Backend\WhyToChooseUsController;
 use App\Http\Controllers\Backend\AboutUsController;
 use App\Http\Controllers\Backend\MessageController;
 use App\Http\Controllers\Backend\PostController;
+use App\Http\Controllers\TestController;
 
 
 Route::get('/login',[AuthManagerController::class,'login'])->name('login');
@@ -32,6 +33,7 @@ Route::post('updatepassword',[ForgetPasswordController::class,'updatePassword'])
 Route::get('/resetpassword',[OTPController::class,'indexResetPassword'])->name('resetpassword');
 
 
+Route::get('/test',[TestController::class,'index']);
 Route::group(['middleware'=>'auth'],function(){
 
         Route::prefix('admin')->name('admin.')->group(function(){
@@ -58,6 +60,7 @@ Route::group(['middleware'=>'auth'],function(){
 
         });
 
+
         // Create Room -start
         Route::group(['prefix'=>'ourroom'],function(){
             Route::post('/form',[OurRoomController::class,'form'])->name('ourroom.form');
@@ -68,7 +71,7 @@ Route::group(['middleware'=>'auth'],function(){
             Route::post('/delete',[OurRoomController::class,'delete'])->name('ourroom.delete');
             Route::post('/view',[OurRoomController::class,'view'])->name('ourroom.view');
         });
-        // Create Room -end 
+        // Create Room -end
 
         /* Site settings - start */
         Route::group(['prefix' => 'sitesetting'], function () {
@@ -76,7 +79,7 @@ Route::group(['middleware'=>'auth'],function(){
             Route::post('/update', [SiteSettingController::class, 'updateSiteSetting'])->name('sitesetting.update');
         });
         /** Site settings - end */
-        
+
             /* Our Team member-start*/
         Route::group(['prefix' => 'member'], function () {
             Route::get('/', [TeamMemberController::class, 'index'])->name('member');
@@ -96,7 +99,7 @@ Route::group(['middleware'=>'auth'],function(){
             Route::post('/list', [DocumentController::class, 'list'])->name('document.list');
             Route::post('/delete',[DocumentController::class,'delete'])->name('document.delete');
             Route::post('/restore',[DocumentController::class,'restore'])->name('document.restore');
-    
+
         });
         /*Create Document - end */
 
@@ -147,7 +150,7 @@ Route::group(['middleware'=>'auth'],function(){
             Route::post('/restore', [WhyToChooseUsController::class, 'restore'])->name('why.to.choose.us.restore');
         });
         /* Why To Choose Us - end */
-        
+
         /* Our-values -start */
         Route::group(['prefix' => 'our-values'], function () {
             Route::get('/', [OurValueController::class, 'index'])->name('values');
