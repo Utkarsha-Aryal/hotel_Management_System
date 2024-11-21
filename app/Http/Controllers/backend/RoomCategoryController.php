@@ -68,8 +68,9 @@ class RoomCategoryController extends Controller
             {
                 $array[$i]['sno']=$i +1;
                 $array[$i]['Room_Category'] = $row->category;
-                $array[$i]['price'] = $row->price;
+                $array[$i]['maximum_occupancy'] = $row->maximum_occupancy;
                 $array[$i]['order'] = $row->order_number;
+                $array[$i]['bed_type'] = $row->bed_type;
                 $image = asset('/images/no-image.jpg');
                 if(!empty($row->image)&& file_exists(public_path('/storage/roomCategory/'. $row->image))){
                     $image = asset('/storage/roomCategory').'/'. $row-> image;
@@ -78,7 +79,7 @@ class RoomCategoryController extends Controller
                 $action ="";
                 if(!empty($post['type'])&&$post['type']!='trashed'){
                     $action .= ' <a href="javascript:;" class="viewRoomCategory" title="View Data" data-id="' . $row->id . '"><i class="fa-solid fa-eye" style="color: #008f47;"></i></i></a> |';
-                    $action .= '<a href="javascript:;" class="editRoomCategory" title="Edit Data" data-id="' . $row->id . '" data-category="' . $row->category . '" data-order_number="' . $row->order_number . '" data-price="' . $row->price . '" data-image="'.$image .'"><i class="fa-solid fa-pen-to-square text-primary"></i></a> |';
+                    $action .= '<a href="javascript:;" class="editRoomCategory" title="Edit Data" data-id="' . $row->id . '" data-category="' . $row->category . '" data-maximum_occupancy="' . $row->maximum_occupancy . '" data-bed_type="' . $row->bed_type . '" data-image="'.$image .'" data-order="'.$row->order_number.'" ><i class="fa-solid fa-pen-to-square text-primary"></i></a> |';
 
                 }else if(!empty($post['type'])&&$post['type']=='trashed'){
                     $action .= '<a href="javascript:;" class="restore" title="Restore Data" data-id="' . $row->id . '"><i class="fa-solid fa-undo text-success"></i></a> | ';
@@ -117,9 +118,9 @@ class RoomCategoryController extends Controller
             $data['type'] = 'error';
             $data['message'] = $e->getMessage();
         }
-        return view('backend.room.roomcategory.view',$data);
+        return view('backend.room.room-category.view',$data);
     }
-    
+
     public function delete(Request $request)
     {
         try

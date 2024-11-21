@@ -31,8 +31,8 @@
                             <td>{{ $roomcategoryDetails->category }}</td>
                         </tr>
                         <tr>
-                            <th scope="row">price</th>
-                            <td>{{ $roomcategoryDetails->price }}</td>
+                            <th scope="row">Maximunm Occupancy</th>
+                            <td>{{ $roomcategoryDetails->maximum_occupancy }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Image</th>
@@ -44,7 +44,15 @@
                             ?>
                             <td><img src="{{ $image }}" height="200px" alt="Image">
                         </tr>
-                       
+                        <tr>
+                            <th scope="row">Bed Type</th>
+                            <td>{{$roomcategoryDetails->bed_type}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Order number</th>
+                            <td>{{$roomcategoryDetails->order_number}}</td>
+                        </tr>
+
                     </tbody>
                 </table>
             </div>

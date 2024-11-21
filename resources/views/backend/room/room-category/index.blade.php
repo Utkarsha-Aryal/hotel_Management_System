@@ -45,18 +45,29 @@
                                     name="category">
                             </div>
 
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                            <label for="order_number" class="form-label"> Price <span
-                                    class="required-field">*</span></label>
-                            <input type="number" class="form-control no-spinner" id="price" placeholder="Enter room price"
-                                value="" name="price">
-                            </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2">
                                 <label for="order_number" class="form-label">Order <span
                                         class="required-field">*</span></label>
                                 <input type="text" class="form-control" id="order_number" placeholder="Enter order..."
                                     name="order">
                             </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-6">
+                                <label for="maximum occupancy" class="form-label">Maximum occupancy <span class="required-field">*</span></label>
+                                <input type="text" class="form-control"  placeholder="Enter maximum occupancy"name="maximum_occupancy">
+                            </div>
+
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-6">
+                                <label for="bed_type" class="form-label"> Bed type <span class="required-field">*</span></label>
+                                <select  class="form-select" name="bed_type" id="bed_type">
+                                    <option value="">Select Bed type</option>
+                                    <option value="Single Bed">Single Bed</option>
+                                    <option value="Double Bed">Double Bed</option>
+                                    <option value="Queen Bed">Queen Bed</option>
+                                    <option value="King Bed">King Bed</option>
+                                    <option value="Twin Bed">Twin Bed</option>
+                                </select>
+                            </div>
+
                             <div class="row mt-2">
                                 <label for="review" class="form-label">Photo</label>
                                 <div class="col-10 relative" id="edit-image">
@@ -114,8 +125,9 @@
                                                     <th>S.No</th>
                                                     <th>Room Category</th>
                                                     <th>Order</th>
-                                                    <th>Price</th>
+                                                    <th>Bed Type</th>
                                                     <th>Image</th>
+                                                    <th>Maximum Occupancy</th>
                                                     <th>Action</th>
                                             </thead>
                                             <tbody>
@@ -167,10 +179,14 @@
                         "data": "order"
                     },
                     {
-                        "data":'price'
+                        "data":'bed_type'
                     },
                     {
                         "data":'image'
+                    },
+                    {
+                        "data":'maximum_occupancy'
+
                     },
                     {
                         "data": "action"
@@ -211,8 +227,8 @@
                 }
             });
          //end upload image
-        
-        // save data 
+
+        // save data
         $('.saveData').off('click')
         $('.saveData').on('click',function(){
             console.log('clicked')
@@ -243,7 +259,7 @@
                     // Check if there are validation errors
                     if (response && response.errors) {
                         var errorMessages = '';
-                        
+
                         // Loop through all the validation errors and concatenate them
                         $.each(response.errors, function(field, messages) {
                             messages.forEach(function(message) {
@@ -263,31 +279,39 @@
 
                 })
             }
-            
+
         })
 
-        
+
         $('#RoomCategory').validate({
             rules:{
                 category : 'required',
-                order:"required",
-                price: 'required',
-                image:'required'
+                bed_type:"required",
+                maximum_occupancy: 'required',
+                image:'required',
+                order:'required'
             },
             messages: {
     category: {
         required: "The title field is required."
     },
-   
-
+    maximum_occupancy: {
+        required: "The maximum occupancy field is required to be filled"
+    },
     order: {
         required: "The order number field is required."
     },
     image: {
         required: "Please insert image."
     },
- 
-},  
+    bed_type: {
+        required: "Please select one of the options "
+    },
+    order: {
+        required: 'Please enter the order number'
+    }
+
+},
 highlight: function(element) {
                 $(element).addClass('border-danger')
             },
@@ -296,22 +320,24 @@ highlight: function(element) {
             },
         })
 
-        
 
-       
+
+
         // Edit Program
         $(document).off('click','.editRoomCategory');
         $(document).on('click','.editRoomCategory',function(){
             var id = $(this).data('id');
             var image = $(this).data('image');
-            var order = $(this).data('order_number');
-            var price = $(this).data('price');
+            var order = $(this).data('order');
+            var maximum_occupancy = $(this).data('maximum_occupancy');
+            var bed_type = $(this).data('bed_type');
             var category = $(this).data('category');
             console.log(category);
             $('#RoomCategory input[name = "id"]').val(id);
                 $('#RoomCategory input[name = "order"]').val(order);
-                $('#RoomCategory input[name = "price"]').val(price);
-                $('#RoomCategory input[name = "category"]').val(category)
+                $('#RoomCategory select[name = "bed_type"]').val(bed_type);
+                $('#RoomCategory input[name = "category"]').val(category);
+                $('#RoomCategory input[name = "maximum_occupancy"]').val(maximum_occupancy);
                 $('#RoomCategory ._image').attr('src', image);
             if ($('#id').val()) {
                 $('.saveData').removeClass('btn-success').addClass('btn-primary').html(

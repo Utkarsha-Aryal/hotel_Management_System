@@ -27,7 +27,7 @@ class RoomCategoryRequest extends FormRequest
             'category'=> 'required|min:3|max:255',
             'order'=>'required|numeric|min:1|max_digits:5',
             'image'=>'required|mimes:jpg,jpeg,png|max:512',
-            'price' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
+            'bed_type' => 'required|in:Single Bed,Double Bed,Queen Bed,King Bed,Twin Beds',
         ];
     }
 
@@ -37,20 +37,18 @@ class RoomCategoryRequest extends FormRequest
         'category.required' => 'The category field is required.',
         'category.min' => 'The category must be at least 3 characters.',
         'category.max' => 'The category may not be greater than 255 characters.',
-        
+
         'order.required' => 'The order field is required.',
         'order.numeric' => 'The order must be a number.',
         'order.min' => 'The order must be at least 1.',
         'order.max_digits' => 'The order may not have more than 5 digits.',
-        
+
         'image.required' => 'An image is required.',
         'image.mimes' => 'The image must be a file of type: jpg, jpeg, png.',
         'image.max' => 'The image size may not exceed 512KB.',
-        
-        'price.required' => 'The price field is required.',
-        'price.numeric' => 'The price must be a number.',
-        'price.regex' => 'The price must be a number with up to two decimal places.',
 
+        'bed_type.required' => "The bed type is required please select a valid option",
+        'bed_type.in' => 'Please select a valid option among the options given '
         ];
 
     }

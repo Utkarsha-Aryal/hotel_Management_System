@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('category')->nullable();
             $table->string('order_number')->nullable();
-            $table->integer('price')->nullable();
+            $table->integer('maximum_occupancy')->nullable();
+            $table->string('bed_type')->nullable();
             $table->string('image')->nullable();
             $table->enum('status',['Y','N'])->default('Y');
             $table->timestamps();
