@@ -1,24 +1,24 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Backend\AuthManagerController;
-use App\Http\Controllers\Backend\HomeController;
-use App\Http\Controllers\Backend\UserAccountController;
-use App\Http\Controllers\Backend\ForgetPasswordController;
-use App\Http\Controllers\Backend\OTPController;
-use App\Http\Controllers\Backend\RoomCategoryController;
-use App\Http\Controllers\Backend\OurRoomController;
-use App\Http\Controllers\Backend\SiteSettingController;
-use App\Http\Controllers\Backend\TeamMemberController;
-use App\Http\Controllers\Backend\DocumentController;
-use App\Http\Controllers\Backend\TestimonialController;
-use App\Http\Controllers\Backend\FaqCategoryController;
-use App\Http\Controllers\Backend\FaqController;
-use App\Http\Controllers\Backend\OurValueController;
-use App\Http\Controllers\Backend\WhyToChooseUsController;
-use App\Http\Controllers\Backend\AboutUsController;
-use App\Http\Controllers\Backend\MessageController;
-use App\Http\Controllers\Backend\PostController;
+use App\Http\Controllers\backend\AuthManagerController;
+use App\Http\Controllers\backend\HomeController;
+use App\Http\Controllers\backend\UserAccountController;
+use App\Http\Controllers\backend\ForgetPasswordController;
+use App\Http\Controllers\backend\OTPController;
+use App\Http\Controllers\backend\RoomCategoryController;
+use App\Http\Controllers\backend\OurRoomController;
+use App\Http\Controllers\backend\SiteSettingController;
+use App\Http\Controllers\backend\TeamMemberController;
+use App\Http\Controllers\backend\DocumentController;
+use App\Http\Controllers\backend\TestimonialController;
+use App\Http\Controllers\backend\FaqCategoryController;
+use App\Http\Controllers\backend\FaqController;
+use App\Http\Controllers\backend\OurValueController;
+use App\Http\Controllers\backend\WhyToChooseUsController;
+use App\Http\Controllers\backend\AboutUsController;
+use App\Http\Controllers\backend\MessageController;
+use App\Http\Controllers\backend\PostController;
+use App\Http\Controllers\backend\RoomController;
 use App\Http\Controllers\TestController;
 
 
@@ -103,7 +103,7 @@ Route::group(['middleware'=>'auth'],function(){
         });
         /*Create Document - end */
 
-            /*Testimonial-start */
+        /*Testimonial-start */
         Route::group(['prefix' => 'testimonial'], function () {
             Route::get('/', [TestimonialController::class, 'index'])->name('testimonial');
             Route::post('/save', [TestimonialController::class, 'save'])->name('testimonial.save');
@@ -112,7 +112,7 @@ Route::group(['middleware'=>'auth'],function(){
             Route::post('/delete', [TestimonialController::class, 'delete'])->name('testimonial.delete');
             Route::post('/restore', [TestimonialController::class, 'restore'])->name('testimonial.restore');
         });
-    /*Testimonial-end */
+        /*Testimonial-end */
         Route::group(['prefix' => 'faq'], function () {
             Route::get('/', [FaqController::class, 'index'])->name('faq');
             Route::post('/save', [FaqController::class, 'save'])->name('faq.save');
@@ -174,7 +174,7 @@ Route::group(['middleware'=>'auth'],function(){
         });
         //message end here
 
-          /*Post=> News/Notice/Article/Events-start*/
+        /*Post=> News/Notice/Article/Events-start*/
         Route::group(['prefix' => 'post'], function () {
             Route::get('/', [PostController::class, 'index'])->name('post');
             Route::post('/save', [PostController::class, 'save'])->name('post.save');
@@ -184,8 +184,16 @@ Route::group(['middleware'=>'auth'],function(){
             Route::post('/delete', [PostController::class, 'delete'])->name('post.delete');
             Route::post('/restore', [PostController::class, 'restore'])->name('post.restore');
             Route::post('/deletefeatureimage', [PostController::class, 'deleteFeatureImage'])->name('post.deletefeatureimage');
-    });
-    /*post=> News/Notice/Article/Events-end*/
+        });
+        /*post=> News/Notice/Article/Events-end*/
+
+        // RoomCollection starts here 
+        Route::group(['prefix'=>'room'], function (){
+            Route::get('/',[RoomController::class,'index'])->name('room');
+            Route::post('/save',[RoomController::class,'save'])->name('room.save');
+            Route::post('/list',[RoomController::class,'list'])->name('room.list');
+        });
+
     });
 });
 
