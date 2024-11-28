@@ -43,7 +43,7 @@ class RoomCategoryController extends Controller
         } catch(QueryException $e){
             DB::rollBack();
             $type = 'error';
-            $message = $this->queryMessage;
+            $message = $e->getMessage();
         }catch (Exception $e){
             DB::rollBack();
             $type = "error";

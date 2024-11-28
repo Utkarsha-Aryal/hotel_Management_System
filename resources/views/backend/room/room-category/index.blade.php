@@ -240,7 +240,6 @@
                             RoomCategoryTable.draw();
                             $('.saveData').html('<i class="fa fa-save"></i> Create Room Category');
                             showNotification(response.message,'success');
-
                             $('#RoomCategory')[0].reset();
                             $('#id').val('');
                             $('.saveData').removeClass('btn-primary').addClass('btn-success').html('<i class="fa fa-save"></i> Create Room Category');

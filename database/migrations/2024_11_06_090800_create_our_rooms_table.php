@@ -13,26 +13,17 @@ return new class extends Migration
     {
         Schema::create('our_rooms', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description'); 
-            $table->text('feature_image')->nullable();
+            $table->foreignId('category_id')->constrained('room_categories','id');
+            $table->foreignId('user_id')->nullable();
             $table->integer('order_number');
             $table->integer('max_occupancy'); 
-            $table->foreignId('category_id')->constrained('room_categories','id');
-            $table->string('room_no');
-            $table->enum('status',['Y','N'])->default('Y');
-            $table->enum('wifi', ['Y', 'N'])->default('N');
-            $table->enum('AC', ['Y', 'N'])->default('N');
-            $table->enum('TV', ['Y', 'N'])->default('N');
-            $table->enum('minibar', ['Y', 'N'])->default('N');
-            $table->enum('room_service', ['Y', 'N'])->default('N'); 
-            $table->enum('private_bathroom', ['Y', 'N'])->default('N'); 
-            $table->enum('balcony', ['Y', 'N'])->default('N');
-            $table->enum('swimming_pool', ['Y', 'N'])->default('N');
-            $table->enum('smoking_allowed', ['Y', 'N'])->default('N');
-            $table->enum('pet_friendly', ['Y', 'N'])->default('N');
-            $table->enum('laundry_service', ['Y', 'N'])->default('N'); 
-            $table->enum('booked', ['Y', 'N'])->default('N');
+            $table->integer('room_no')->nullable();
+            $table->integer('floor_no')->nullable();
+            $table->string('room_view')->nullable();
+            $table->enum('smoking',['Y','N'])->default('N');
+            $table->enum('room_status',['Available','Occupied','Maintenance','Blocked'])->nullable();
+            $table->integer('room_size')->nullable();
+            $table->enum('status',['Y','N'])->default('Y'); 
             $table->timestamps();
         });
     }

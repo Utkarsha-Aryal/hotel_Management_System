@@ -117,8 +117,7 @@ class OurRoom extends Model
             $query = OurRoom::with('roomCategory')->selectRaw("(SELECT COUNT(*) from our_rooms) As totalrecs, id, title , description, order_number , max_occupancy , category_id , room_no")->whereRaw($cond);
             if ($limit>-1){
                 $result = $query->orderByRaw($orderby)->offset($offset)->limit($limit)->get();
-            }else{
-                $result = $query->orderByRaw($orderby)->get();
+             
             }
             if($result){
                 $ndata = $result;
