@@ -80,12 +80,7 @@ class Room extends Model
 
             if ($get['columns'][2]['search']['value'])
                 $cond .= " and lower(category) like '%" . $get['columns'][2]['search']['value'] . "%'";
-            $limit = 15;
-            $offset = 0;
-            if (!empty($get["length"]) && $get["length"]) {
-                $limit = $get['length'];
-                $offset = $get["start"];
-            }
+            
             $query = Room::with('postedBy')->selectRaw("(SELECT count(*) FROM rooms) AS totalrecs, category_id, id as id, order_number, max_occupancy, room_no, user_id, floor_no,room_view,smoking,room_status,room_size")
                 ->whereRaw($cond);
             if ($limit > -1) {
