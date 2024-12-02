@@ -63,10 +63,12 @@ class Room extends Model
     {
         try {
             $get = $post;
+
             if(!empty($post['category_id'])){
                 $data = Room::where('category_id',$post['category_id'])->get();
             }else{
                 $data = Room::all();
+
             }
              return $data;
         } catch (Exception $e) {
