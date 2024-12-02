@@ -33,7 +33,7 @@ Route::post('updatepassword',[ForgetPasswordController::class,'updatePassword'])
 Route::get('/resetpassword',[OTPController::class,'indexResetPassword'])->name('resetpassword');
 
 
-Route::get('/test',[TestController::class,'index']);
+Route::get('/test',[TestController::class,'index']); 
 Route::group(['middleware'=>'auth'],function(){
 
         Route::prefix('admin')->name('admin.')->group(function(){

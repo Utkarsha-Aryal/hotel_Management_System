@@ -93,6 +93,16 @@
                             <label class="form-check-label" for="trashed_file">
                                 View Trashed
                             </label>
+                            <select class="form-select category " aria-label="Default select example" id="Category_selected" name="category_id">
+                        -<option value="">Select All </option>
+                             @foreach ($category as $roomcategory)
+                        <option value="{{ $roomcategory->id }}" 
+                            @if (isset($prevPost) && $prevPost->category_id == $roomcategory->id) selected @endif>
+                        {{ $roomcategory->category }}
+                           </option>
+                    @endforeach
+                    </select>
+
                         </div>
                     </div>
                 </div>
@@ -101,10 +111,9 @@
                         <div id="datatable-basic_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 mb-3">
-                                    <div class="dataTables_length" id="datatable-basic_length">
+                                    <div class="Table" id="">
                                         <table id="roomCollection"
-                                            class="table table-bordered text-nowrap w-100 dataTable no-footer mt-3"
-                                            aria-describedby="datatable-basic_info">
+                                            class="table table-bordered text-nowrap w-100 dataTable no-footer mt-3">
                                             <thead>
                                                 <tr>
                                                     <th>S.No</th>
@@ -124,7 +133,6 @@
                                             <tbody id="write">
                                                 <!-- rows will be dynamically populated -->
                                             </tbody>
-                                            <br>
                                             <tbody id="read">
                                                 
 
@@ -179,65 +187,12 @@
             });
             //to pass image url to crop model ---End
 
-
-            //to crop images---Start
-            $('#cropModel').off('shown.bs.modal');
-            $('#cropModel').on('shown.bs.modal', function() {
-                var image = document.getElementById('image');
-
-                cropper = new Cropper(image, {
-                    initailAspectRatio: 1,
-                    aspectRatio: 1,
-                    viewMode: 1,
-                    moveable: false,
-                    zoomOnWheel: false,
-
-                    preview: '.preview',
-                });
-
-
-                $("#rotateRight").on("click", e => {
-                    cropper.rotate(90);
-                });
-
-                $("#rotateLeft").on("click", e => {
-                    cropper.rotate(-90);
-                });
-            }).on('hidden.bs.modal', function() {
-                cropper.destroy();
-                cropper = null;
-            });
-            //to crop images---End
-
-            //save crop image ---Start
-            var base64data;
-            $('#cropImage').off('click');
-            $('#cropImage').on('click', function() {
-
-                canvas = cropper.getCroppedCanvas({
-                    width: 160,
-                    height: 160,
-                });
-                canvas.toBlob(function(blob) {
-                    url = URL.createObjectURL(blob);
-                    $('._image').attr('src', url);
-                    var reader = new FileReader();
-                    reader.readAsDataURL(blob);
-                    reader.onloadend = function() {
-                        base64data = reader.result;
-                        $('#cropModel').modal('hide');
-                        $('#croppedImg').val(base64data);
-                    }
-                })
-            });
-            //save crop image ---End
-
             // Add new Row
             let counter = 1;
             $('#addRow').on('click',function(){
                 $('#roomCollection  #write').append(`
                 <tr>
-                <td>${counter++}</td>
+                <td>#</td>
                     <td>
                     <select class="form-select category " aria-label="Default select example" id="Category" name="category_id">
                         -<option value="">Select Category </option>
@@ -277,7 +232,6 @@
                     <td>
                         <input type="hidden" class="form-control id">
                         <button class="btn btn-success btn-sm saveRow">Save</button>
-                        <button class="btn btn-danger btn-sm deleteRow">Delete</button>
                     </td>
 
                 </tr>
@@ -288,7 +242,7 @@
     </script>
 
     <script>
-        var postTable;
+        var RoomTable;
         $(document).ready(function() {
             // Save Row
         $(document).on('click', '.saveRow', function () {
@@ -324,7 +278,7 @@
                     if (response.type === 'success') {
                         showNotification(response.message,'success');
                         row.find('.id').val(response.id);
-                        RoomCategoryTable.ajax.reload(); // Reload DataTable
+                        reloadTable()
                     } else {
                         showNotification(response.message,'error');
                     }
@@ -343,76 +297,91 @@
                     $('#postModal').modal('show');
                 });
             });
+            
+            reloadTable()
+ $('#Category_selected').change(function(){
+reloadTable()
 
+})  
+    
+function reloadTable() {
+    let type = $('#trashed_file').is(':checked') ? 'trashed' : 'nottrashed';
+    let category_id = $('#Category_selected').val(); // Ensure category_id is dynamically retrieved
 
-            RoomTable = $('#Table').DataTable({
-                "aoColumns": [{
-                        "data": "sno"
-                    },
-                    {
-                        "data": "category"
-                    },
-                    {
-                        "data": "order_number"
-                    },
-                    {
-                        "data": "max_occupancy"
-                    },
-                    {
-                        "data": "smoking"
-                    },
-                    {
-                        "data": "room_no"
-                    },
-                    
-                    {
-                        "data": "floor_no"
-                    },
-                    {
-                        "data":"posted_by"
+    $.ajax({
+        type: "POST",
+        url: '{{ route('admin.room.list') }}',
+        data: {
+            _token: '{{ csrf_token() }}', // Include CSRF token for POST requests in Laravel
+            type: type,
+            category_id: category_id
+        },
+        success: function(data) {
+            const tableBody = $('#roomCollection #read');
+            const tableBody2 = $('#roomCollection #write');
+            tableBody.empty();
+            tableBody2.empty();
 
-                    },
-                    {
-                        "data":"room_view"
-
-                    },
-                    {
-                        "data":"room_status"
-
-                    },
-                    {
-                        "data": "action"
-                    },
-                ],
-                "ajax": {
-                    "url": "{{route('admin.room.list')}}",
-                    "type": "POST",
-                    "data": function(d) {
-                        var type = $('#trashed_file').is(':checked') == true ? 'trashed' :
-                            'nottrashed';
-                        d.type = type;
-                    }
-                },
-                "initComplete": function() {
-                    // Ensure text input fields in the header for specific columns with placeholders
-                    this.api().columns([1, 6]).every(function() {
-                        var column = this;
-                        var input = document.createElement("input");
-                        var columnName = column.header().innerText.trim();
-                        // Append input field to the header, set placeholder, and apply CSS styling
-                        $(input).appendTo($(column.header()).empty())
-                            .attr('placeholder', columnName).css('width',
-                                '100%') // Set width to 100%
-                            .addClass(
-                                'search-input-highlight') // Add a CSS class for highlighting
-                            .on('keyup change', function() {
-                                column.search(this.value).draw();
-                            });
+            if (data.data && data.data.length > 0) {
+    data.data.forEach((room, index) => {
+        
+        let categoryOptions = '<option value="">Select Category</option>';
+        data.rc.forEach(r => {
+                        const isSelected = room.category_id === r.id ? 'selected' : '';
+                        categoryOptions += `<option value="${r.id}" ${isSelected}>${r.category}</option>`;
                     });
-                }
-            });
 
+        tableBody.append(`
+            <tr>
+                <td>${index + 1}</td>
+                <td>
+                    <select class="form-select category" aria-label="Default select example" id="Category" name="category_id">
+                    
+                        
+                        ${categoryOptions}
+                    </select>
+                </td>
+                <td><input type="number" class="form-control order no-spinner" name="order" placeholder="Order" value="${room.order_number || ''}"></td>
+                <td><input type="number" class="form-control maximum_occupancy no-spinner" name="maximum_occupancy" placeholder="Max Occupancy" value="${room.max_occupancy || ''}"></td>
+                <td><input type="number" class="form-control room_no no-spinner" name="room_no" placeholder="Room no" value="${room.room_no || ''}"></td>
+                <td><input type="number" class="form-control floor_no no-spinner" name="floor_no" placeholder="Floor no" value="${room.floor_no || ''}"></td>
+                <td><input type="text" class="form-control room_view" name="room_view" placeholder="Room view" value="${room.room_view || ''}"></td>
+                <td>
+                    <select class="form-select smoking" id="smoking" name="smoking">
+                        <option value="">Select Smoking</option>
+                        <option value="Y" ${room.smoking === 'Y' ? 'selected' : ''}>Allowed</option>
+                        <option value="N" ${room.smoking === 'N' ? 'selected' : ''}>Not Allowed</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-select room_status" name="room_status">
+                        <option value="">Select Room Status</option>
+                        <option value="Available" ${room.room_status === 'Available' ? 'selected' : ''}>Available</option>
+                        <option value="Occupied" ${room.room_status === 'Occupied' ? 'selected' : ''}>Occupied</option>
+                        <option value="Maintenance" ${room.room_status === 'Maintenance' ? 'selected' : ''}>Maintenance</option>
+                        <option value="Blocked" ${room.room_status === 'Blocked' ? 'selected' : ''}>Blocked</option>
+                    </select>
+                </td>
+                <td><input type="number" class="form-control room_size" name="room_size" placeholder="Room Size" value="${room.room_size || ''}"></td>
+                <td>@if (Auth::user()) {{ Auth::user()->full_name }} @endif</td>
+                <td>
+                    <input type="hidden" class="form-control id" value="${room.id}">
+                    <button class="btn btn-primary btn-sm saveRow">Update</button>
+                    <button class="btn btn-danger btn-sm deleteRow">Delete</button>
+                </td>
+            </tr>
+        `);
+    });
+} else {
+    tableBody.append('<tr><td colspan="12">Data not found</td></tr>');
+}
 
+        },
+        error: function(err) {
+            console.error(err.responseText);
+        }
+    });
+}
             // Edit news-start
             $(document).off('click', '.editNews');
             $(document).on('click', '.editNews', function() {
