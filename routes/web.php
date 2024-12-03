@@ -192,6 +192,8 @@ Route::group(['middleware'=>'auth'],function(){
             Route::get('/',[RoomController::class,'index'])->name('room');
             Route::post('/save',[RoomController::class,'save'])->name('room.save');
             Route::post('/list',[RoomController::class,'list'])->name('room.list');
+            Route::post('/delete',[RoomController::class,'delete'])->name('room.delete');
+            Route::post('/restore',[RoomController::class,'restore'])->name('room.restore');
         });
 
     });

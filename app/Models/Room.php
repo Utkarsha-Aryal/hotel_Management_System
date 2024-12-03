@@ -63,14 +63,54 @@ class Room extends Model
     {
         try {
             $get = $post;
-            if(!empty($post['category_id'])){
-                $data = Room::where('category_id',$post['category_id'])->get();
-            }else{
-                $data = Room::all();
+         
+            if(!empty($post['category_id']) && !empty($post['type']) && $post['type']==="nottrashed" ){
+                $cond = "status = 'Y'";
+                $data = Room::orderby('order_number','asc')->where('category_id', $post['category_id'])
+                ->whereRaw($cond)
+                ->get();
+    
+            }elseif(!empty($post['category_id']) && !empty($post['type']) && $post['type']==="trashed"){
+                $cond = "status = 'N'";
+                $data = Room::orderby('order_number','asc')->where('category_id', $post['category_id'])
+                ->whereRaw($cond)
+                ->get();
+
+            }elseif(!empty($post['type']) && $post['type']==="trashed"){
+                $cond = "status = 'N'";
+                $data = Room::orderby('order_number','asc')->whereRaw($cond)->get();
+
+            }
+            else{
+                $cond = "status = 'Y'";
+                $data = Room::orderby('order_number','asc')->whereRaw($cond)->get();
+
+            }
+            if(!empty($post['query'])){
+                // $data = $data->where('room_no', $query);
+                // dd($data);
+                $cond .= " AND room_no = '".$post['room_no']."'";
+
             }
              return $data;
         } catch (Exception $e) {
             throw $e;
+        }
+    }
+
+    public static function restoreData($post)
+    {
+        try{
+            $updateArray = [
+                'status'=>'Y',
+                'updated_at'=>Carbon::now(),
+            ];
+            if(!Room::where(['id'=>$post['id']])->update($updateArray)){
+                throw new Exception("Couldn't Restore Data. Please try again", 1);
+            }
+            return true;
+        }catch(Exception $e){
+            throw $e;   
         }
     }
 }

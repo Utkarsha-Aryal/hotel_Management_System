@@ -25,11 +25,6 @@
                 </ol>
             </nav>
         </div>
-        <div class="d-flex my-xl-auto right-content">
-            <div class="pe-1 mb-xl-0">
-                <button type="button" class="btn btn-primary addNewsButton" id ="addRow" ><i class="fa fa-add"></i> Add Row</button>
-            </div>
-        </div>
     </div>
     <!-- Modal -->
     <div class="modal fade" id="postModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -42,43 +37,6 @@
     </div>
     <!-- Page Header Close -->
     <!-- Start::row-1 -->
-    {{-- crop modal-start --}}
-
-    <div class="modal cropModel fade" id="cropModel" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Crop Image</h5>
-                    <button type="button" class="closeCrop" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="img-container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <img id="image" src="#" style="height: 200px; width: 250px;">
-                            </div>
-                            <div class="col-md-12">
-                                <div class="preview"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="controls">
-                        <button id="rotateLeft">Rotate Left</button>
-                        <button id="rotateRight">Rotate Right</button>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn_btn cancel_btn cancelCrop" id="cancelCrop">Cancel</button>
-                    <button type="button" class="btn_btn submit_btn" id="cropImage">Crop</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- crop modal-end --}}
-
     <div class="row ">
         <div class="col-xl-12">
             <div class="card custom-card">
@@ -88,8 +46,8 @@
                     </div>
                     <div class="row ms-0">
                         <div class="form-check col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                            <input class="form-check-input" type="checkbox" value="Y" id="trashed_file"
-                                name="trashed_file">
+                            <input class="form-check-input" type="checkbox" value="Y" id="trashed_file" name="trashed_file">
+
                             <label class="form-check-label" for="trashed_file">
                                 View Trashed
                             </label>
@@ -100,10 +58,10 @@
                             @if (isset($prevPost) && $prevPost->category_id == $roomcategory->id) selected @endif>
                         {{ $roomcategory->category }}
                            </option>
-                    @endforeach
-                    </select>
+                        @endforeach
+                        </select>
 
-                        </div>
+                    </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -120,8 +78,8 @@
                                                     <th>Category</th>
                                                     <th>Order</th>
                                                     <th>Max Occupancy</th>
-                                                    <th>Room no</th>
-                                                    <th>Floor no</th>
+                                                    <th><input type="number" class=" room_no no-spinner" id =filterroomno placeholder="Room no" ></th> 
+                                                    <th><input type="number" class=" room_no no-spinner" id =filterFloor placeholder="Floor no"></th>
                                                     <th>Room view</th>
                                                     <th>Smoking</th>
                                                     <th>Room Status</th>
@@ -153,43 +111,15 @@
 @section('script')
     {{-- crop image-start --}}
     <script>
-        var cropper;
+        var RoomTable;
         $(document).ready(function() {
-
-            //cancel Crop Model --Start
-            $('.cancelCrop').off('click', '');
-            $('.cancelCrop').on('click', function(e) {
-
-                var thumbnail_image = $('.thumbnail_image')[0].files[0];
-                $('._image').attr('src', URL.createObjectURL(thumbnail_image));
-                $('#cropModel').modal('hide');
+          
+            let selectedCategory = $('#Category_selected').val();
+            $('#Category_selected').on('change', function () {
+            selectedCategory = $(this).val(); // Update the selected value
             });
-            //close Model --End
-
-            //to pass image url to crop model ---Start
-            $('.thumbnail_image').off('change');
-            $('.thumbnail_image').on("change", function(e) {
-                var files = e.target.files;
-                var done = function(url) {
-                    $('#image').attr('src', url);
-                    $('#cropModel').modal('show');
-                };
-                var reader;
-                var file;
-                var url;
-
-                if (files && files.length > 0) {
-                    file = files[0];
-                    if (URL) {
-                        done(URL.createObjectURL(file));
-                    }
-                }
-            });
-            //to pass image url to crop model ---End
-
-            // Add new Row
             let counter = 1;
-            $('#addRow').on('click',function(){
+            function addRow(){
                 $('#roomCollection  #write').append(`
                 <tr>
                 <td>#</td>
@@ -197,10 +127,10 @@
                     <select class="form-select category " aria-label="Default select example" id="Category" name="category_id">
                         -<option value="">Select Category </option>
                              @foreach ($category as $roomcategory)
-                        <option value="{{ $roomcategory->id }}" 
-                            @if (isset($prevPost) && $prevPost->category_id == $roomcategory->id) selected @endif>
-                        {{ $roomcategory->category }}
-                           </option>
+                       <option value="{{ $roomcategory->id }}" 
+                                ${selectedCategory == '{{ $roomcategory->id }}' ? 'selected' : ''}>
+                                {{ $roomcategory->category }}
+                            </option>
                     @endforeach
                     </select>
                     </td>
@@ -231,19 +161,13 @@
                     </td>
                     <td>
                         <input type="hidden" class="form-control id">
-                        <button class="btn btn-success btn-sm saveRow">Save</button>
+                        <button class="btn btn-success btn-sm saveRow"><i class="fa fa-save"></i> Save</button>
                     </td>
 
                 </tr>
 
                 `);
-            })
-        });
-    </script>
-
-    <script>
-        var RoomTable;
-        $(document).ready(function() {
+            }
             // Save Row
         $(document).on('click', '.saveRow', function () {
             const row = $(this).closest('tr');
@@ -303,26 +227,55 @@
 reloadTable()
 
 })  
-    
-function reloadTable() {
+
+$('#trashed_file').on('change', function () {
+    console.log("clicked")
+        const isChecked = $(this).is(':checked'); // Check if the checkbox is checked
+
+        // Update buttons in the table rows based on the checkbox state
+        $('#roomCollection #write tr').each(function () {
+            const saveButton = $(this).find('button.saveRow'); // Select the save button
+            if (isChecked) {
+                // Change to Restore button
+                saveButton.removeClass('saveRow btn-primary')
+                          .addClass('restore btn-success')
+                          .text('Restore');
+            } else {
+                // Change back to Update button
+                saveButton.removeClass('restore btn-success')
+                          .addClass('saveRow btn-primary')
+                          .text('Update');
+            }
+        });
+    });
+    $('#filterroomno').on('keyup',function(){
+                let query = $(this).val();
+                reloadTable(query);
+                
+            })
+function reloadTable(query) {
     let type = $('#trashed_file').is(':checked') ? 'trashed' : 'nottrashed';
     let category_id = $('#Category_selected').val(); // Ensure category_id is dynamically retrieved
-
+    
+   
     $.ajax({
         type: "POST",
         url: '{{ route('admin.room.list') }}',
         data: {
             _token: '{{ csrf_token() }}', // Include CSRF token for POST requests in Laravel
             type: type,
-            category_id: category_id
+            category_id: category_id,
+            search : query
         },
         success: function(data) {
             const tableBody = $('#roomCollection #read');
             const tableBody2 = $('#roomCollection #write');
+            addRow()
             tableBody.empty();
             tableBody2.empty();
+            
 
-            if (data.data && data.data.length > 0) {
+            if (Array.isArray(data.data) && data.data.length > 0) {
     data.data.forEach((room, index) => {
         
         let categoryOptions = '<option value="">Select Category</option>';
@@ -336,7 +289,6 @@ function reloadTable() {
                 <td>${index + 1}</td>
                 <td>
                     <select class="form-select category" aria-label="Default select example" id="Category" name="category_id">
-                    
                         
                         ${categoryOptions}
                     </select>
@@ -366,14 +318,17 @@ function reloadTable() {
                 <td>@if (Auth::user()) {{ Auth::user()->full_name }} @endif</td>
                 <td>
                     <input type="hidden" class="form-control id" value="${room.id}">
-                    <button class="btn btn-primary btn-sm saveRow">Update</button>
-                    <button class="btn btn-danger btn-sm deleteRow">Delete</button>
+                    ${room.action}
                 </td>
             </tr>
         `);
     });
+    addRow();
 } else {
     tableBody.append('<tr><td colspan="12">Data not found</td></tr>');
+
+    addRow();
+    
 }
 
         },
@@ -401,17 +356,19 @@ function reloadTable() {
             // view trashed items-start
             $('#trashed_file').off('change');
             $('#trashed_file').on('change', function(e) {
-                postTable.draw();
+                reloadTable()
             });
             // view trashed items-ends
 
 
             // Delete news
-            $(document).off('click', '.deleteNews');
-            $(document).on('click', '.deleteNews', function() {
+            $(document).off('click', '.deleteRow');
+            $(document).on('click', '.deleteRow', function() {
+                const row = $(this).closest('tr');
 
                 var type = $('#trashed_file').is(':checked') == true ? 'trashed' :
                     'nottrashed';
+                    
 
                 Swal.fire({
                     title: type === "nottrashed" ? "Are you sure you want to delete this item" :
@@ -427,16 +384,16 @@ function reloadTable() {
                         showLoader();
                         var id = $(this).data('id');
                         var data = {
-                            id: id,
+                            id: row.find('.id').val(),
                             type: type,
                         };
-                        var url = '';
+                        var url = '{{ route('admin.room.delete') }}';
                         $.post(url, data, function(response) {
                             //var result = JSON.parse(response);
                             if (response) {
                                 if (response.type === 'success') {
                                     showNotification(response.message, 'success');
-                                    postTable.draw();
+                                    reloadTable()
                                     hideLoader();
                                 } else {
                                     showNotification(response.message, 'error');
@@ -449,8 +406,8 @@ function reloadTable() {
             });
 
             //Restore
-            $(document).off('click', '.restore');
-            $(document).on('click', '.restore', function() {
+            $(document).off('click', '.restoreRow');
+            $(document).on('click', '.restoreRow', function() {
                 Swal.fire({
                     title: "Are you sure you want to restore Post?",
                     text: "This will restore the Post.",
@@ -467,12 +424,12 @@ function reloadTable() {
                             id: id,
                             type: 'restore'
                         };
-                        var url = '';
+                        var url = '{{route('admin.room.restore')}}';
                         $.post(url, data, function(response) {
                             if (response) {
                                 if (response.type === 'success') {
                                     showNotification(response.message, 'success');
-                                    postTable.draw();
+                                    reloadTable()
                                     hideLoader();
                                 } else {
                                     showNotification(response.message, 'error');
