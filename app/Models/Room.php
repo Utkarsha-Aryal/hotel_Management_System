@@ -64,6 +64,7 @@ class Room extends Model
         try {
             $get = $post;
          
+
             if(!empty($post['category_id']) && !empty($post['type']) && $post['type']==="nottrashed" ){
                 $cond = "status = 'Y'";
                 $data = Room::orderby('order_number','asc')->where('category_id', $post['category_id'])
@@ -90,6 +91,7 @@ class Room extends Model
                 // $data = $data->where('room_no', $query);
                 // dd($data);
                 $cond .= " AND room_no = '".$post['room_no']."'";
+
 
             }
              return $data;
