@@ -48,7 +48,7 @@
                         <div class="form-check col-xl-12 col-lg-12 col-md-12 col-sm-12">
                             <input class="form-check-input" type="checkbox" value="Y" id="trashed_file" name="trashed_file">
 
-                            <label class="form-check-label" for="trashed_file">
+                            <label class="form-check-label"  for="trashed_file">
                                 View Trashed
                             </label>
                             <select class="form-select category " aria-label="Default select example" id="Category_selected" name="category_id">
@@ -71,18 +71,28 @@
                                 <div class="col-sm-12 col-md-12 mb-3">
                                     <div class="Table" id="">
                                         <table id="roomCollection"
-                                            class="table table-bordered text-nowrap w-100 dataTable no-footer mt-3">
+                                            class="table table-bordered text-nowrap w-100  no-footer">
                                             <thead>
                                                 <tr>
                                                     <th>S.No</th>
-                                                    <th>Category</th>
-                                                    <th>Order</th>
-                                                    <th>Max Occupancy</th>
-                                                    <th><input type="number" class=" room_no no-spinner" id =filterroomno placeholder="Room no" ></th> 
-                                                    <th><input type="number" class=" room_no no-spinner" id =filterFloor placeholder="Floor no"></th>
+                                                    <th style="width: 20%;">Category</th>
+                                                    <th style="width: 2%;" >Order</th>
+                                                    <th style="width: 2%;">Max Occupancy</th>
+                                                    <th style="width: 2%;"><input type="number" class=" room_no no-spinner" id =filterroomno placeholder="Room no" ></th> 
+                                                    <th style="width: 2%;"><input type="number" class=" room_no no-spinner" id =filterFloor placeholder="Floor no"></th>
                                                     <th>Room view</th>
-                                                    <th>Smoking</th>
-                                                    <th>Room Status</th>
+                                                    <th  style="width: 20%;"><select class="form-select smoking" id = "conditionsmoking" name='smoking'>
+                            <option value=""> Smoking </option>
+                            <option value="Y">Yes </option>
+                            <option value="N">No</option>
+                        </select></th>
+                                                    <th  style="width: 20%;"><select class="form-select room_status" id="roomstatus" name='room_status'>
+                            <option value=""> Room Status</option>
+                            <option value="Available">Available </option>
+                            <option value="Occupied">Occupied</option>
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Blocked">Blocked</option>
+                        </select></th>
                                                     <th>Room Size</th>
                                                     <th>Posted By</th>
                                                     <th>Action</th>
@@ -120,6 +130,8 @@
             });
             let counter = 1;
             function addRow(){
+                const isChecked = $(trashed_file).is(':checked');
+                if(!isChecked){
                 $('#roomCollection  #write').append(`
                 <tr>
                 <td>#</td>
@@ -141,8 +153,8 @@
                      <td><input type="text" class="form-control room_view " placeholder="Room view" name = 'name = 'room_view'></td>
                      <td><select class="form-select smoking" id = "smoking" name='smoking'>
                             <option value="">Select Smoking </option>
-                            <option value="Y">Allowed </option>
-                            <option value="N">Not Allowed</option>
+                            <option value="Y">Yes </option>
+                            <option value="N">No</option>
                         </select></td>
                     <td><select class="form-select room_status" name='room_status'>
                             <option value="">Select Room Status</option>
@@ -168,6 +180,7 @@
 
                 `);
             }
+        }
             // Save Row
         $(document).on('click', '.saveRow', function () {
             const row = $(this).closest('tr');
@@ -228,35 +241,56 @@ reloadTable()
 
 })  
 
+
 $('#trashed_file').on('change', function () {
-    console.log("clicked")
         const isChecked = $(this).is(':checked'); // Check if the checkbox is checked
 
         // Update buttons in the table rows based on the checkbox state
         $('#roomCollection #write tr').each(function () {
             const saveButton = $(this).find('button.saveRow'); // Select the save button
             if (isChecked) {
-                // Change to Restore button
                 saveButton.removeClass('saveRow btn-primary')
                           .addClass('restore btn-success')
                           .text('Restore');
+                
             } else {
-                // Change back to Update button
+                
                 saveButton.removeClass('restore btn-success')
                           .addClass('saveRow btn-primary')
                           .text('Update');
             }
         });
     });
-    $('#filterroomno').on('keyup',function(){
-                let query = $(this).val();
-                reloadTable(query);
-                
-            })
-function reloadTable(query) {
+    $('#filterroomno, #filterFloor').on('keyup', function() {
+    // Get the values from both filters
+    let queryRoom = $('#filterroomno').val().trim();  // Get the room number query
+    let queryFloor = $('#filterFloor').val().trim();  // Get the floor number query
+    
+    // Check if either queryRoom or queryFloor has a value before calling reloadTable
+    reloadTable(queryRoom, queryFloor);
+});
+function getvalue(){
+    console.log("function called")
+    let queryRoom = $('#filterroomno').val().trim();  // Get the room number query
+    let queryFloor = $('#filterFloor').val().trim();
+    reloadTable(queryRoom, queryFloor);
+}
+
+$('#conditionsmoking').change(function()
+{
+    getvalue()
+
+})
+
+$('#roomstatus').change(function(){
+    getvalue()
+})
+
+function reloadTable(queryRoom, queryFloor) {
     let type = $('#trashed_file').is(':checked') ? 'trashed' : 'nottrashed';
     let category_id = $('#Category_selected').val(); // Ensure category_id is dynamically retrieved
-    
+    let smoking = $('#conditionsmoking').val();
+    let roomstatus = $('#roomstatus').val();
    
     $.ajax({
         type: "POST",
@@ -265,7 +299,10 @@ function reloadTable(query) {
             _token: '{{ csrf_token() }}', // Include CSRF token for POST requests in Laravel
             type: type,
             category_id: category_id,
-            search : query
+            room_no : queryRoom,
+            floor: queryFloor,
+            smoking: smoking,
+            roomstatus : roomstatus
         },
         success: function(data) {
             const tableBody = $('#roomCollection #read');
@@ -301,8 +338,8 @@ function reloadTable(query) {
                 <td>
                     <select class="form-select smoking" id="smoking" name="smoking">
                         <option value="">Select Smoking</option>
-                        <option value="Y" ${room.smoking === 'Y' ? 'selected' : ''}>Allowed</option>
-                        <option value="N" ${room.smoking === 'N' ? 'selected' : ''}>Not Allowed</option>
+                        <option value="Y" ${room.smoking === 'Y' ? 'selected' : ''}>Yes</option>
+                        <option value="N" ${room.smoking === 'N' ? 'selected' : ''}>No</option>
                     </select>
                 </td>
                 <td>

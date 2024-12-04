@@ -63,37 +63,33 @@ class Room extends Model
     {
         try {
             $get = $post;
-         
-
-            if(!empty($post['category_id']) && !empty($post['type']) && $post['type']==="nottrashed" ){
+            if(!empty($post['type'] && $post['type']=="nottrashed")){
                 $cond = "status = 'Y'";
-                $data = Room::orderby('order_number','asc')->where('category_id', $post['category_id'])
-                ->whereRaw($cond)
-                ->get();
-    
-            }elseif(!empty($post['category_id']) && !empty($post['type']) && $post['type']==="trashed"){
+            }else{
                 $cond = "status = 'N'";
-                $data = Room::orderby('order_number','asc')->where('category_id', $post['category_id'])
-                ->whereRaw($cond)
-                ->get();
-
-            }elseif(!empty($post['type']) && $post['type']==="trashed"){
-                $cond = "status = 'N'";
-                $data = Room::orderby('order_number','asc')->whereRaw($cond)->get();
-
             }
-            else{
-                $cond = "status = 'Y'";
-                $data = Room::orderby('order_number','asc')->whereRaw($cond)->get();
 
+            if(!empty($post['category_id'])){
+                $cond .= " AND category_id = '".$post['category_id']."'";
             }
-            if(!empty($post['query'])){
-                // $data = $data->where('room_no', $query);
-                // dd($data);
+
+            if(!empty($post['room_no'])){
                 $cond .= " AND room_no = '".$post['room_no']."'";
-
-
             }
+
+            if(!empty($post['floor'])){
+                $cond .= " AND floor_no = '".$post['floor']."'";
+            }
+            if(!empty($post['smoking'])){
+                $cond .= " AND smoking = '".$post['smoking']."'";
+            }
+            if(!empty($post['roomstatus'])){
+                $cond .= " AND room_status = '".$post['roomstatus']."'";
+            }
+
+            $data = Room::orderby('order_number','asc')
+                ->whereRaw($cond)
+                ->get();
              return $data;
         } catch (Exception $e) {
             throw $e;

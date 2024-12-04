@@ -74,12 +74,12 @@ class RoomController extends Controller
         $data = $data->map(function ($room) use ($post) {
             if ($post['type'] === "trashed") {
                 $room->action = '
-                    <a  href="javascript:;" class="restoreRow" data-id="' . $room->id . '"><i class="fa-solid fa-undo text-success"></i></a>
+                    <a  href="javascript:;" class="restoreRow" data-id="' . $room->id . '"><i class="fa-solid fa-undo text-success"></i></a>|
                     <a href="javascript:;" class="deleteRow" data-id="' . $room->id . '"><i class="fa fa-trash text-danger"></i></a>
                 ';
             } else {
                 $room->action = '
-                    <a href="javascript:;" class="saveRow" data-id="' . $room->id . '"><i class="fa-solid fa-pen-to-square text-primary"></i></a>
+                    <a href="javascript:;" class="saveRow" data-id="' . $room->id . '"><i class="fa-solid fa-pen-to-square text-primary"></i></a>|
                     <a href="javascript:;" class="deleteRow" data-id="' . $room->id . '"><i class="fa fa-trash text-danger"></i></a>
                 ';
             }
