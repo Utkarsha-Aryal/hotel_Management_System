@@ -5,8 +5,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\RoomCategory;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Models\Common;
+use App\Http\Requests\OurRoomRequest;
 
 
 class RoomController extends Controller
@@ -33,7 +35,7 @@ class RoomController extends Controller
         return view('backend.room.room-collection.index',$data);
     }
 
-    public function save(Request $request)
+    public function save(OurRoomRequest $request)
     {
         try {
             $post = $request->all();
@@ -79,14 +81,15 @@ class RoomController extends Controller
                 ';
             } else {
                 $room->action = '
-                    <a href="javascript:;" class="saveRow" data-id="' . $room->id . '"><i class="fa-solid fa-pen-to-square text-primary"></i></a>|
+                    <a href="javascript:;" class="saveRow" data-id="' . $room->id . '"><i class="fa-solid fa-save text-primary"></i></a>|
                     <a href="javascript:;" class="deleteRow" data-id="' . $room->id . '"><i class="fa fa-trash text-danger"></i></a>
                 ';
             }
             return $room;
         });
         $rc = RoomCategory::all();
-        return response()->json(['data'=>$data,'rc'=>$rc]);
+        $user = User::all();
+        return response()->json(['data'=>$data,'rc'=>$rc,'user'=>$user]);
     }
 
     public function delete(Request $request)

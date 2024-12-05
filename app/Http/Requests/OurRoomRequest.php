@@ -24,72 +24,59 @@ class OurRoomRequest extends FormRequest
     public function rules(Request $request): array
     {
         return [
-            'title' => 'required|min:3|max:255',
-            'order_number'=>'required|numeric|min:1|max_digits:5',
-            'occupancy'=>'required|numeric|min:1|max:30',
+            'category' => 'required',
+            'order'=>'required|numeric|min:1|max_digits:5',
+            'maximum_occupancy'=>'required|numeric|min:1|max:30',
             'room_no'=>'required|numeric|min:1',
-            'wifi'=>'required|in:Y,N',
-            'AC' =>'required|in:Y,N',
-            'TV'=>'required|in:Y,N',
-            'minibar'=>'required|in:Y,N',
-            'room_service'=>'required|in:Y,N',
-            "private_bathroom"=>'required|in:Y,N',
-            "balcony"=>'required|in:Y,N',
-            'details'=> 'required|min:5|max:1000',
-            
-
+            'floor_no'=>'required|numeric|min:1',
+            'smoking' =>'required|in:Y,N',
+            'room_status'=>'required|in:Available,Occupied,Maintenance,Blocked',
+            'room_size'=>'required|numeric',
         ];
     }
 
-    public function messages()
-    {
-            return [
-                'title.required' => 'The title is required.',
-                'title.min' => 'The title must be at least 3 characters.',
-                'title.max' => 'The title may not be greater than 255 characters.',
-
-                'occupancy.required'=>'Please enter how many people can fit in the room',
-                'occupancy.min'=>'The occupancy must be at least 1',
-                'occupancy.max'=>'The maximum occupancy is 30',
-                
-                'order_number.required' => 'The order number is required.',
-                'order_number.numeric' => 'The order number must be a valid number.',
-                'order_number.min' => 'The order number must be at least 1.',
-                'order_number.max' => 'The order number cannot exceed 6 digits.',
-                
-                'occupancy.required' => 'The occupancy is required.',
-                'occupancy.numeric' => 'The occupancy must be a valid number.',
-                
-                'room_no.required' => 'The room number is required.',
-                'room_no.numeric' => 'The room number must be a valid number.',
-                'room_no.min' => 'The room number must be at least 1.',
-                
-                'wifi.required' => 'Please select whether the room has wifi.',
-                'wifi.in' => 'The wifi option must be either "Y" or "N".',
-                
-                'AC.required' => 'Please select whether the room has AC.',
-                'AC.in' => 'The AC option must be either "Y" or "N".',
-                
-                'TV.required' => 'Please select whether the room has a TV.',
-                'TV.in' => 'The TV option must be either "Y" or "N".',
-                
-                'minibar.required' => 'Please select whether the room has a minibar.',
-                'minibar.in' => 'The minibar option must be either "Y" or "N".',
-                
-                'room_service.required' => 'Please select whether the room has room service.',
-                'room_service.in' => 'The room service option must be either "Y" or "N".',
-                
-                'private_bathroom.required' => 'Please select whether the room has a private bathroom.',
-                'private_bathroom.in' => 'The private bathroom option must be either "Y" or "N".',
-                
-                'balcony.required' => 'Please select whether the room has a balcony.',
-                'balcony.in' => 'The balcony option must be either "Y" or "N".',
-                
-                'details.required' => 'The details field is required.',
-                'details.min' => 'The details must be at least 5 characters.',
-                'details.max' => 'The details may not be greater than 1000 characters.',
-            ];
-
+   public function messages()
+{
+    return [
+        // Category
+        'category_id.required' => 'Please select a category.',
         
-    }
+        // Order
+        'order.required' => 'The order number is required.',
+        'order.numeric' => 'The order number must be a valid number.',
+        'order.min' => 'The order number must be at least 1.',
+        'order.max_digits' => 'The order number cannot exceed 5 digits.',
+
+        // Maximum Occupancy
+        'maximum_occupancy.required' => 'Please enter the maximum occupancy.',
+        'maximum_occupancy.numeric' => 'The maximum occupancy must be a valid number.',
+        'maximum_occupancy.min' => 'The occupancy must be at least 1.',
+        'maximum_occupancy.max' => 'The occupancy cannot exceed 30.',
+
+        // Room Number
+        'room_no.required' => 'The room number is required.',
+        'room_no.numeric' => 'The room number must be a valid number.',
+        'room_no.min' => 'The room number must be at least 1.',
+
+        // Floor Number
+        'floor_no.required' => 'The floor number is required.',
+        'floor_no.numeric' => 'The floor number must be a valid number.',
+        'floor_no.min' => 'The floor number must be at least 1.',
+
+        // Smoking
+        'smoking.required' => 'Please select the smoking preference.',
+        'smoking.in' => 'The smoking option must be either "Yes" (Y) or "No" (N).',
+
+        // Room Status
+        'room_status.required' => 'Please select the room status.',
+        'room_status.in' => 'The room status must be one of: Available, Occupied, Maintenance, Blocked.',
+
+        // Room Size
+        'room_size.required' => 'The room size is required.',
+        'room_size.numeric' => 'The room size must be a valid number.',
+        'room_size.min' => 'The room size must be at least 1.',
+
+    ];
+}
+
 }

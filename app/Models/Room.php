@@ -25,6 +25,11 @@ class Room extends Model
     {
         try
         {
+          
+            $roomExists = Room::where('room_no',$post['room_no'])->where('status','Y')->where('id','!=',$post['id']??null)->exists();
+            if($roomExists){
+                throw new Exception('This room no is already taken by some other room',1);
+            }
 
            $insertArray = [
             'category_id' => $post['category'],

@@ -19,6 +19,7 @@ use App\Http\Controllers\backend\AboutUsController;
 use App\Http\Controllers\backend\MessageController;
 use App\Http\Controllers\backend\PostController;
 use App\Http\Controllers\backend\RoomController;
+use App\Http\Controllers\backend\RoomAmenitiesController;
 use App\Http\Controllers\TestController;
 
 
@@ -194,7 +195,18 @@ Route::group(['middleware'=>'auth'],function(){
             Route::post('/list',[RoomController::class,'list'])->name('room.list');
             Route::post('/delete',[RoomController::class,'delete'])->name('room.delete');
             Route::post('/restore',[RoomController::class,'restore'])->name('room.restore');
+
         });
+
+              /*RoomAmenities*/
+            Route::group(['prefix'=>'main'],function(){
+                Route::get('/',[RoomAmenitiesController::class,'index'])->name('main');
+                Route::get('/amne',[RoomAmenitiesController::class,'amne'])->name('main.amne');
+                Route::post('/{tab}', [RoomAmenitiesController::class, 'loadTab']);
+
+            });
+       
+
 
     });
 });

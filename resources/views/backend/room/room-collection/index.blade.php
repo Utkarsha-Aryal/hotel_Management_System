@@ -1,8 +1,4 @@
-@extends('backend.layouts.main')
 
-@section('title')
-    Rooms
-@endsection
 <style>
     input#trashed_file {
         border: 1px solid rgb(0, 99, 198) !important
@@ -13,28 +9,9 @@
     margin: 0;
 }
 </style>
-@section('main-content')
+
     <!-- Page Header -->
-    <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-        <div class="my-auto">
-            <h5 class="page-title fs-21 mb-1">Our Rooms</h5>
-            <nav>
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">Main Contents</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Our Rooms</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="postModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                {{-- Content goes here --}}
-            </div>
-        </div>
-    </div>
+    
     <!-- Page Header Close -->
     <!-- Start::row-1 -->
     <div class="row ">
@@ -78,10 +55,10 @@
                                                     <th style="width: 20%;">Category</th>
                                                     <th style="width: 2%;" >Order</th>
                                                     <th style="width: 2%;">Max Occupancy</th>
-                                                    <th style="width: 2%;"><input type="number" class=" room_no no-spinner" id =filterroomno placeholder="Room no" ></th> 
-                                                    <th style="width: 2%;"><input type="number" class=" room_no no-spinner" id =filterFloor placeholder="Floor no"></th>
+                                                    <th style="width: 2%;"><input type="number" class=" room_no no-spinner" id =filterroomno placeholder="Room no" style = "width :100px"></th> 
+                                                    <th style="width: 2%;"><input type="number" class=" room_no no-spinner" id =filterFloor placeholder="Floor no" style = "width :100px"></th>
                                                     <th>Room view</th>
-                                                    <th  style="width: 20%;"><select class="form-select smoking" id = "conditionsmoking" name='smoking'>
+                                                    <th  style="width: 15%;"><select class="form-select smoking" id = "conditionsmoking" name='smoking'>
                             <option value=""> Smoking </option>
                             <option value="Y">Yes </option>
                             <option value="N">No</option>
@@ -116,18 +93,17 @@
         </div>
     </div>
     <!--End::row-1 -->
-@endsection
 
-@section('script')
-    {{-- crop image-start --}}
     <script>
         var RoomTable;
         $(document).ready(function() {
-          
+
+
             let selectedCategory = $('#Category_selected').val();
             $('#Category_selected').on('change', function () {
             selectedCategory = $(this).val(); // Update the selected value
             });
+
             let counter = 1;
             function addRow(){
                 const isChecked = $(trashed_file).is(':checked');
@@ -146,22 +122,22 @@
                     @endforeach
                     </select>
                     </td>
-                    <td><input type="number" class="form-control order no-spinner" name = "order"  placeholder="Order"></td>
+                    <td><input  type="number" class="form-control order no-spinner" name = "order"  placeholder="Order"></td>
                     <td><input type="number" class="form-control maximum_occupancy no-spinner" name ="maximum_occupancy" placeholder="Max Occupancy"></td>
                      <td><input type="number" class="form-control room_no no-spinner" placeholder="Room no" name = "room_no"></td>
                     <td><input type="number" class="form-control floor_no no-spinner" placeholder="floor no" name="floor_no"></td>
                      <td><input type="text" class="form-control room_view " placeholder="Room view" name = 'name = 'room_view'></td>
                      <td><select class="form-select smoking" id = "smoking" name='smoking'>
                             <option value="">Select Smoking </option>
-                            <option value="Y">Yes </option>
+                            <option value="Y" >Yes </option>
                             <option value="N">No</option>
                         </select></td>
                     <td><select class="form-select room_status" name='room_status'>
                             <option value="">Select Room Status</option>
-                            <option value="Available">Available </option>
-                            <option value="Occupied">Occupied</option>
-                            <option value="Maintenance">Maintenance</option>
-                            <option value="Blocked">Blocked</option>
+                            <option value="Available"  >Available </option>
+                            <option value="Occupied" >Occupied</option>
+                            <option value="Maintenance" >Maintenance</option>
+                            <option value="Blocked" >Blocked</option>
                         </select>
                     </td>
 
@@ -197,10 +173,6 @@
                 room_size: row.find('.room_size').val()
             };
 
-            if (!data.category || !data.order || !data.room_no || !data.maximum_occupancy || !data.room_view || !data.floor_no || !data.smoking || !data.room_status) {
-                alert('All fields are required.');
-                return;
-            }
 
             const formData = new FormData();
             Object.keys(data).forEach(key => formData.append(key, data[key]));
@@ -216,12 +188,16 @@
                         showNotification(response.message,'success');
                         row.find('.id').val(response.id);
                         reloadTable()
-                    } else {
+                    } else if (response.type === 'error'){
+                        reloadTable()
                         showNotification(response.message,'error');
                     }
                 },
-                error: function () {
-                    showNotification(response.message,'error');
+                error: function (xhr) {
+                    hideLoader();
+            const errorMessage = xhr.responseJSON?.message || 'An unexpected error occurred.';
+            showNotification(errorMessage, 'error');
+            reloadTable()
                 }
             });
         });
@@ -321,6 +297,13 @@ function reloadTable(queryRoom, queryFloor) {
                         categoryOptions += `<option value="${r.id}" ${isSelected}>${r.category}</option>`;
                     });
 
+        let postedby = 'Unknown'
+        data.user.forEach(u =>{
+        if (room.user_id === u.id) {
+            postedby = u.full_name;
+         }
+        })
+
         tableBody.append(`
             <tr>
                 <td>${index + 1}</td>
@@ -352,7 +335,7 @@ function reloadTable(queryRoom, queryFloor) {
                     </select>
                 </td>
                 <td><input type="number" class="form-control room_size" name="room_size" placeholder="Room Size" value="${room.room_size || ''}"></td>
-                <td>@if (Auth::user()) {{ Auth::user()->full_name }} @endif</td>
+                <td>${postedby}</td>
                 <td>
                     <input type="hidden" class="form-control id" value="${room.id}">
                     ${room.action}
@@ -478,20 +461,6 @@ function reloadTable(queryRoom, queryFloor) {
                 });
             });
 
-            //View Post
-            $(document).off('click', '.viewPost');
-            $(document).on('click', '.viewPost', function() {
-                var id = $(this).data('id');
-                var url = '';
-                var data = {
-                    id: id
-                };
-                $.post(url, data, function(response) {
-                    $('#postModal .modal-content').html(response);
-                    $('#postModal').modal('show');
-                });
-            });
-
         });
     </script>
-@endsection
+
