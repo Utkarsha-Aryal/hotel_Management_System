@@ -15,15 +15,21 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained('room_categories','id');
             $table->foreignId('user_id')->nullable();
-            $table->integer('order_number');
-            $table->integer('max_occupancy'); 
+            $table->integer('order_number')->nullable();
+            $table->integer('max_occupancy')->nullable(); 
             $table->integer('room_no')->nullable();
             $table->integer('floor_no')->nullable();
             $table->string('room_view')->nullable();
             $table->enum('smoking',['Y','N'])->default('N');
             $table->enum('room_status',['Available','Occupied','Maintenance','Blocked'])->nullable();
             $table->integer('room_size')->nullable();
-            $table->enum('status',['Y','N'])->default('Y'); 
+            $table->enum('status',['Y','N'])->default('Y')->nullable(); 
+            $table->enum('wifi',['Y','N'])->default('Y')->nullable(); 
+            $table->enum('AC',['Y','N'])->default('Y')->nullable();
+            $table->enum('TV',['Y','N'])->default('Y')->nullable();  
+            $table->enum('Mini_Bar',['Y','N'])->default('Y')->nullable();  
+            $table->enum('Toiletries',['Y','N'])->default('Y')->nullable();  
+            $table->enum('hairdryer',['Y','N'])->default('Y')->nullable();  
             $table->timestamps();
         });
     }

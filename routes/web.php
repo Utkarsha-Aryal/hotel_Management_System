@@ -190,7 +190,7 @@ Route::group(['middleware'=>'auth'],function(){
 
         // RoomCollection starts here 
         Route::group(['prefix'=>'room'], function (){
-            Route::get('/',[RoomController::class,'index'])->name('room');
+            Route::post('/',[RoomController::class,'index'])->name('room');
             Route::post('/save',[RoomController::class,'save'])->name('room.save');
             Route::post('/list',[RoomController::class,'list'])->name('room.list');
             Route::post('/delete',[RoomController::class,'delete'])->name('room.delete');
@@ -199,11 +199,12 @@ Route::group(['middleware'=>'auth'],function(){
         });
 
               /*RoomAmenities*/
-            Route::group(['prefix'=>'main'],function(){
-                Route::get('/',[RoomAmenitiesController::class,'index'])->name('main');
-                Route::get('/amne',[RoomAmenitiesController::class,'amne'])->name('main.amne');
-                Route::post('/{tab}', [RoomAmenitiesController::class, 'loadTab']);
-
+        Route::group(['prefix'=>'main'],function(){
+            Route::get('/',[RoomAmenitiesController::class,'index'])->name('main');
+            Route::get('/amne',[RoomAmenitiesController::class,'amne'])->name('main.amne');
+            Route::post('/send', [RoomAmenitiesController::class, 'loadTab'])->name('main.send');
+            Route::post('/list',[RoomAmenitiesController::class, 'list'])->name('main.list');
+            Route::post('/save',[RoomAmenitiesController::class,'save'])->name('main.save');
             });
        
 

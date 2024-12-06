@@ -15,6 +15,7 @@ class RoomController extends Controller
 {
     public function index( Request $request){
         try{
+            $post = $request->all();
         $category = RoomCategory::get();
         $data=[];
         $data = [
@@ -32,7 +33,7 @@ class RoomController extends Controller
         $data['message']= $e->getMessage();
     }
 
-        return view('backend.room.room-collection.index',$data);
+    return response()->json(['data' => $data]);
     }
 
     public function save(OurRoomRequest $request)
@@ -50,6 +51,7 @@ class RoomController extends Controller
 
             if(!$result){
                 throw new Exception('Could not save record',1);
+              
             }
             DB::commit();
 

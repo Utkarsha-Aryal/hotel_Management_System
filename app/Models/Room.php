@@ -116,4 +116,43 @@ class Room extends Model
             throw $e;   
         }
     }
+
+    public static function amnetieslist($post)
+    {
+        try {
+            $cond =  "status = 'Y'";
+            $data = Room::orderby('order_number','asc')->whereRaw($cond)->get();
+            return $data;
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+    }
+public static function saveAmenities($post)
+{
+    try {
+        $insertArray = [
+        'wifi'=>$post['wifi'],
+        'AC'=>$post['AC'],
+        'TV'=>$post['room_tv'],
+        'Mini_Bar' =>$post['Mini_Bar'],
+        'Toiletries' =>$post['room_toiletries'],
+        'hairdryer' =>$post['room_hairdeyer']
+        ];
+        $insertArray = filterData($insertArray);
+        if(!empty($post['id'])){
+            $insertArray['updated_at'] = Carbon::now();
+            if(!Room::where('id',$post['id'])->update($insertArray)){
+                throw new Exception("Couldn't update Records",1);
+            }
+        }else{
+            throw new Exception("The record doesn't exsist");
+        }
+        return true;
+
+    } catch (Exception $e) {
+        throw $e;
+    }
+}
+
 }

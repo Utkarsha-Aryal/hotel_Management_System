@@ -30,12 +30,6 @@
                             </label>
                             <select class="form-select category " aria-label="Default select example" id="Category_selected" name="category_id">
                         -<option value="">Select All </option>
-                             @foreach ($category as $roomcategory)
-                        <option value="{{ $roomcategory->id }}" 
-                            @if (isset($prevPost) && $prevPost->category_id == $roomcategory->id) selected @endif>
-                        {{ $roomcategory->category }}
-                           </option>
-                        @endforeach
                         </select>
 
                     </div>
@@ -97,6 +91,32 @@
     <script>
         var RoomTable;
         $(document).ready(function() {
+            addRow();
+            $.ajax({
+                url: "{{route('admin.room')}}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                },
+                success: function(response){
+                    const categoryDropdown = $('#Category_selected');
+            categoryDropdown.empty();
+            categoryDropdown.append('<option value="">Select All</option>');
+
+            
+
+            response.data.category.forEach(function (category) {
+                let selectedCategoryId = null;
+                categoryDropdown.append(`
+                    <option value="${category.id}" 
+                        ${selectedCategoryId == category.id ? 'selected' : ''}>
+                        ${category.category}
+                    </option>
+                `);
+           
+            });
+                }
+            })
 
 
             let selectedCategory = $('#Category_selected').val();
@@ -105,60 +125,84 @@
             });
 
             let counter = 1;
-            function addRow(){
-                const isChecked = $(trashed_file).is(':checked');
-                if(!isChecked){
-                $('#roomCollection  #write').append(`
-                <tr>
-                <td>#</td>
-                    <td>
-                    <select class="form-select category " aria-label="Default select example" id="Category" name="category_id">
-                        -<option value="">Select Category </option>
-                             @foreach ($category as $roomcategory)
-                       <option value="{{ $roomcategory->id }}" 
-                                ${selectedCategory == '{{ $roomcategory->id }}' ? 'selected' : ''}>
-                                {{ $roomcategory->category }}
-                            </option>
-                    @endforeach
-                    </select>
-                    </td>
-                    <td><input  type="number" class="form-control order no-spinner" name = "order"  placeholder="Order"></td>
-                    <td><input type="number" class="form-control maximum_occupancy no-spinner" name ="maximum_occupancy" placeholder="Max Occupancy"></td>
-                     <td><input type="number" class="form-control room_no no-spinner" placeholder="Room no" name = "room_no"></td>
-                    <td><input type="number" class="form-control floor_no no-spinner" placeholder="floor no" name="floor_no"></td>
-                     <td><input type="text" class="form-control room_view " placeholder="Room view" name = 'name = 'room_view'></td>
-                     <td><select class="form-select smoking" id = "smoking" name='smoking'>
-                            <option value="">Select Smoking </option>
-                            <option value="Y" >Yes </option>
-                            <option value="N">No</option>
-                        </select></td>
-                    <td><select class="form-select room_status" name='room_status'>
-                            <option value="">Select Room Status</option>
-                            <option value="Available"  >Available </option>
-                            <option value="Occupied" >Occupied</option>
-                            <option value="Maintenance" >Maintenance</option>
-                            <option value="Blocked" >Blocked</option>
-                        </select>
-                    </td>
+            function addRow() {
+    $.ajax({
+        url: "{{ route('admin.room') }}",
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+        },
+        success: function (response) {
+            const categoryDropdown = $('.category1');
+            categoryDropdown.empty();
+            categoryDropdown.append('<option value="">Select All</option>');
 
-                    <td>
-                    <input type="number" class="form-control room_size" name = "room_size" placeholder = "Room Size">
-                    </td>
-                    <td>
-                     @if (Auth::user()) {{ Auth::user()->full_name }} @endif
-                    </td>
-                    <td>
-                        <input type="hidden" class="form-control id">
-                        <button class="btn btn-success btn-sm saveRow"><i class="fa fa-save"></i> Save</button>
-                    </td>
+            let categoryOptions = '<option value="">Select Category</option>';
+            response.data.category.forEach(function (category) {
+                // Populate the dropdown options
+                categoryOptions += `
+                    <option value="${category.id}">
+                        ${category.category}
+                    </option>
+                `;
+            });
 
-                </tr>
-
+            // Ensure `trashed_file` is defined or skip this check if not required
+            const isChecked = typeof trashed_file !== 'undefined' && $(trashed_file).is(':checked');
+            if (!isChecked) {
+                $('#roomCollection #write').append(`
+                    <tr>
+                        <td>#</td>
+                        <td>
+                            <select class="form-select category" aria-label="Default select example" id="Category" name="category_id">
+                                ${categoryOptions}
+                            </select>
+                        </td>
+                        <td><input type="number" class="form-control order no-spinner" name="order" placeholder="Order"></td>
+                        <td><input type="number" class="form-control maximum_occupancy no-spinner" name="maximum_occupancy" placeholder="Max Occupancy"></td>
+                        <td><input type="number" class="form-control room_no no-spinner" name="room_no" placeholder="Room no"></td>
+                        <td><input type="number" class="form-control floor_no no-spinner" name="floor_no" placeholder="Floor no"></td>
+                        <td><input type="text" class="form-control room_view" name="room_view" placeholder="Room view"></td>
+                        <td>
+                            <select class="form-select smoking" id="smoking" name="smoking">
+                                <option value="">Select Smoking</option>
+                                <option value="Y">Yes</option>
+                                <option value="N">No</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select room_status" name="room_status">
+                                <option value="">Select Room Status</option>
+                                <option value="Available">Available</option>
+                                <option value="Occupied">Occupied</option>
+                                <option value="Maintenance">Maintenance</option>
+                                <option value="Blocked">Blocked</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control room_size" name="room_size" placeholder="Room Size">
+                        </td>
+                        <td>
+                            @if (Auth::user()) {{ Auth::user()->full_name }} @endif
+                        </td>
+                        <td>
+                            <input type="hidden" class="form-control id">
+                            <button class="btn btn-success btn-sm saveRow"><i class="fa fa-save"></i> Save</button>
+                        </td>
+                    </tr>
                 `);
             }
-        }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+            alert('Unable to fetch data. Please try again.');
+        },
+    });
+}
+
             // Save Row
-        $(document).on('click', '.saveRow', function () {
+        $(document).on('click', '.saveRow', function (e) {
+            e.preventDefault();
             const row = $(this).closest('tr');
             const data = {
                 id: row.find('.id').val(),
@@ -189,7 +233,6 @@
                         row.find('.id').val(response.id);
                         reloadTable()
                     } else if (response.type === 'error'){
-                        reloadTable()
                         showNotification(response.message,'error');
                     }
                 },
@@ -197,7 +240,6 @@
                     hideLoader();
             const errorMessage = xhr.responseJSON?.message || 'An unexpected error occurred.';
             showNotification(errorMessage, 'error');
-            reloadTable()
                 }
             });
         });
@@ -343,7 +385,7 @@ function reloadTable(queryRoom, queryFloor) {
             </tr>
         `);
     });
-    addRow();
+    
 } else {
     tableBody.append('<tr><td colspan="12">Data not found</td></tr>');
 
