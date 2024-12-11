@@ -13,28 +13,6 @@ use App\Http\Requests\OurRoomRequest;
 
 class RoomController extends Controller
 {
-    public function index( Request $request){
-        try{
-            $post = $request->all();
-        $category = RoomCategory::get();
-        $data=[];
-        $data = [
-            'category'=>$category];
-        $data['type'] = 'success';
-        $data['message']='Successfullt get data.';
-    } catch (QueryException $e){
-
-        $data['type'] = 'error';
-        $data['message'] = $this->queryMessage;
-
-    } catch(Exception $e){
-
-        $data['type']='error';
-        $data['message']= $e->getMessage();
-    }
-
-    return response()->json(['data' => $data]);
-    }
 
     public function save(OurRoomRequest $request)
     {

@@ -182,6 +182,7 @@
 
         })
     }
+    $(document).off('click', '.update');
     $(document).on('click','.update',function(){
         const row = $(this).closest('tr');
         const data = {

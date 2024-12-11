@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use Illuminate\Support\Facades\DB;
+use App\Models\RoomCategory;
 
 class RoomAmenitiesController extends Controller
 {
@@ -13,9 +14,6 @@ class RoomAmenitiesController extends Controller
         return view('backend.room.room-collection.main');
     }
 
-    public function amne(){
-        return view('backend.room.room-collection.amne');
-    }
 
     // load the two tabs 
     public function loadTab(Request $request)
@@ -23,8 +21,14 @@ class RoomAmenitiesController extends Controller
         try {
             $post = $request->all();
             if ($post['tab'] == 'index') {
-                // Redirect to the 'room' route
-                return view('backend.room.room-collection.index');
+                $category = RoomCategory::get();
+                 $data=[];
+                 $data = [
+                        'category'=>$category];
+                        $data['type'] = 'success';
+                        $data['message']='Successfullt get data.';
+                    
+                return view('backend.room.room-collection.index',$data);
             }else if($post['tab'] == 'amne'){
                 return view('backend.room.room-collection.amne');
             }
