@@ -11,7 +11,7 @@ use App\Models\RoomCategory;
 class RoomAmenitiesController extends Controller
 {
     public function index(){
-        return view('backend.room.room-collection.main');
+        return view('backend.room.room-collection.index');
     }
 
 
@@ -28,9 +28,9 @@ class RoomAmenitiesController extends Controller
                         $data['type'] = 'success';
                         $data['message']='Successfullt get data.';
                     
-                return view('backend.room.room-collection.index',$data);
+                return view('backend.room.room-collection.room',$data);
             }else if($post['tab'] == 'amne'){
-                return view('backend.room.room-collection.amne');
+                return view('backend.room.room-collection.amnities');
             }
         } catch (Exception $e) {
             return response()->json(['message' => 'Error loading tab'], 500);

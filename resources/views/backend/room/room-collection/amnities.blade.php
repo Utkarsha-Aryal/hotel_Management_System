@@ -105,6 +105,7 @@
             </div>
         </div>
     </div>
+</div>
 
 <script>
     $(document).ready(function(){
@@ -112,7 +113,7 @@
     function reloadTable(){
         $.ajax({
             type: 'POST',
-            url: '{{route('admin.main.list')}}',
+            url: '{{route('admin.room-setting.list')}}',
             data: {
             _token: '{{ csrf_token() }}'
        },
@@ -198,7 +199,7 @@
         Object.keys(data).forEach(key => formData.append(key, data[key]));
 
         $.ajax({
-                url: "{{ route('admin.main.save') }}",
+                url: "{{ route('admin.room-setting.save') }}",
                 type: "POST",
                 data: formData,
                 processData: false,

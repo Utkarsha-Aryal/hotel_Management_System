@@ -159,7 +159,7 @@
                             <a href="javascript:void(0);">Rooms</a>
                         </li>
                         <li class="slide" id="childMenu" data-id="program">
-                            <a href="{{('ourroom') }}" class="side-menu__item">Our Rooms</a>
+                            <a href="{{('room-setting') }}" class="side-menu__item">Room Setting</a>
                         </li>
                         <li class="slide" data-id="course">
                             <a href="{{('rooms') }}" class="side-menu__item">Room Category</a>
