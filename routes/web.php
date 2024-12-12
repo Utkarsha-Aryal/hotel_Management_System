@@ -20,6 +20,7 @@ use App\Http\Controllers\backend\MessageController;
 use App\Http\Controllers\backend\PostController;
 use App\Http\Controllers\backend\RoomController;
 use App\Http\Controllers\backend\RoomAmenitiesController;
+use App\Http\Controllers\backend\SeasonController;
 use App\Http\Controllers\TestController;
 
 
@@ -34,11 +35,10 @@ Route::post('updatepassword',[ForgetPasswordController::class,'updatePassword'])
 Route::get('/resetpassword',[OTPController::class,'indexResetPassword'])->name('resetpassword');
 
 
-Route::get('/test',[TestController::class,'index']); 
 Route::group(['middleware'=>'auth'],function(){
 
-        Route::prefix('admin')->name('admin.')->group(function(){
-            Route::get('/dashboard',[HomeController::class,'index'])->name('dashboard');
+     Route::prefix('admin')->name('admin.')->group(function(){
+        Route::get('/dashboard',[HomeController::class,'index'])->name('dashboard');
 
         // Create user account-start
         Route::group(['prefix'=>'account'],function(){
@@ -203,10 +203,15 @@ Route::group(['middleware'=>'auth'],function(){
             Route::post('/send', [RoomAmenitiesController::class, 'loadTab'])->name('room-setting.send');
             Route::post('/list',[RoomAmenitiesController::class, 'list'])->name('room-setting.list');
             Route::post('/save',[RoomAmenitiesController::class,'save'])->name('room-setting.save');
-            });
+
+        });
+
+        Route::group(['prefix'=>'price-setting'],function(){
+            Route::get('/',[SeasonController::class,'index'])->name('price-setting');
+            Route::post('/tab',[SeasonController::class,'loadTab'])->name('price-setting.tab');
+
+        });
        
-
-
     });
 });
 

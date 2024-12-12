@@ -244,6 +244,9 @@
         </div>
         <!-- End::app-content -->
 
+        @include('backend.layouts.footer')
+
+
       
 
     </div>
@@ -401,10 +404,11 @@ function escapeHtml(str) {
         return escapeMap[match];
     });
 }
-@yield('script')
     </script>
+
+@yield('script')
+
    
-   @include('backend.layouts.footer')
         
 </body>
 

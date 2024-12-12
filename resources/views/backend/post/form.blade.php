@@ -186,6 +186,7 @@
 <script>
     $(document).ready(function() {
         showDatePicker();
+        console.log(showDatePicker())
         var quill = new Quill('#details', {
             theme: 'snow'
         });
