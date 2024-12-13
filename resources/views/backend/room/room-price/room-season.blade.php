@@ -148,6 +148,7 @@
 
 
 <script>
+        var RoomPriceTable; 
     $(document).ready(function(){
         showDatePicker();
         $('.nepali-datepicker').nepaliDatePicker();
@@ -174,14 +175,12 @@
                 showLoader();
                 $('#RoomPrice').ajaxSubmit({
                     success: function(response){
-                        if(response.type==='success'){
-                            $('.saveData').html('<i class="fa fa-save"></i> Create Room Category');
+                        if(response.type==='Success'){
+                            RoomPriceTable.draw();
+                            $('.saveData').html('<i class="fa fa-save"></i> Save');
                             showNotification(response.message,'success');
                             $('#RoomPrice')[0].reset();
                             $('#id').val('');
-                            $('.saveData').removeClass('btn-primary').addClass('btn-success').html('<i class="fa fa-save"></i> Create Room Category');
-                            $('._image').attr('src', "{{ asset('/images/no-image.jpg') }}");
-
                         }else{
                             showNotification(response.message,'error');
                             hideLoader();
@@ -211,11 +210,175 @@
                         showNotification(response ? response.message : 'An error occurred', 'error');
                     }
                 }
-
-
                 })
-            
+        })
 
+        RoomPriceTable = $('#RoomPriceTable').DataTable({
+            "sPaginationType": "full_numbers",
+            "bSearchable": false,
+            "lengthMenu":[
+                [5,10,15,20,25,-1],
+                [5,10,15,20,25,"All"]
+            ],
+            'iDisplayLength':15,
+            "sDom": 'ltipr',
+            "bAutoWidth": false,
+            "aaSorting":[
+                [2]
+            ],
+            'bSort': true,
+            'bProcessing':true,
+            "bServerSide": true,
+            "oLanguage": {
+                "sEmptyTable": "<p class='no_data_message'>No data available.</p>"
+            },
+            "aoColumnDefs": [{
+                "bSortable": false,
+                "aTargets": [0, 1,3,4,5]
+             }],
+             "aoColumns": [{
+                        "data": "sno"
+                    },
+                    {
+                        "data": "season_name"
+                    },
+                    {
+                        "data": "order"
+                    },
+                    {
+                        "data":'start_date'
+                    },
+                    {
+                        "data":'end_date'
+                    },
+                    {
+                        "data": "action"
+                    },
+                ],
+                "ajax": {
+                    "url": '{{route('admin.price-setting.list')}}',
+                    "type": "POST",
+                    "data": function(d) {
+                        var type = $('#trashed_file').is(':checked') == true ? 'trashed' :
+                            'nottrashed';
+                        d.type = type;
+                    }
+                },
+                "initComplete": function() {
+                    // Ensure text input fields in the header for specific columns with placeholders
+                    this.api().columns([1]).every(function() {
+                        var column = this;
+                        var input = document.createElement("input");
+                        var columnName = column.header().innerText.trim();
+                        // Append input field to the header, set placeholder, and apply CSS styling
+                        $(input).appendTo($(column.header()).empty())
+                            .attr('placeholder', columnName).css('width',
+                                '100%') // Set width to 100%
+                            .addClass(
+                                'search-input-highlight') // Add a CSS class for highlighting
+                            .on('keyup change', function() {
+                                column.search(this.value).draw();
+                            });
+                    });
+                }
+        })
+
+        $(document).off('click','.editRoomCategory');
+        $(document).on('click','.editRoomCategory',function(){
+            var id = $(this).data('id');
+            var order = $(this).data('order');
+            var start_date = $(this).data('start_date');
+            var end_date = $(this).data('end_date');
+            var Season_name = $(this).data('season_name');
+                 $('#RoomPrice input[name = "id"]').val(id);
+                $('#RoomPrice input[name = "order"]').val(order);
+                $('#RoomPrice input[name = "start_date"]').val(start_date);
+                $('#RoomPrice input[name = "Season_Name"]').val(Season_name);
+                $('#RoomPrice input[name = "end_date"]').val(end_date);
+            if ($('#id').val()) {
+                $('.saveData').removeClass('btn-success').addClass('btn-primary').html(
+                     '<i class="fa fa-save"></i> Update Season');
+                } else {
+                    $('.saveData').removeClass('btn-primary').addClass('btn-success').html(
+                     '<i class="fa fa-save"></i> Save ');
+                }
+        });
+
+        $('#trashed_file').off('change');
+            $('#trashed_file').on('change', function(e) {
+                RoomPriceTable.draw();
+            });
+
+        $(document).off('click','.deleteRoomCategory');
+        $(document).on('click','.deleteRoomCategory',function(){
+            var type = $('#trashed_file').is(':checked')== true ? ' trashed': 'nottrashed';
+            Swal.fire({
+                title: type === "nottrashed"? "Are you sure you want to delete this Season":
+                    "Are you sure you want to delete permanently this category",
+                text: "You won't be alble to revert it!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DB1F48",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, Delete it!"
+            }).then((result)=>{
+                if(result.isConfirmed){
+                    showLoader();
+                    var id = $(this).data('id');
+                    var data ={
+                        id: id,
+                        type: type,
+                    };
+                    var url = '{{route('admin.price-setting.delete')}}'
+                    $.post(url,data,function(response){
+                        if(response){
+                            if(response.type==='success'){
+                                showNotification(response.message, response.type)
+                                RoomPriceTable.draw();
+                                hideLoader();
+                            }else{
+                                showNotification(response.message,'error');
+                                hideLoader();
+                            }
+                        }
+                    })
+                }
+            })
+        })
+
+        $(document).off('click','.restore');
+        $(document).on('click','.restore',function(){
+            Swal.fire({
+                title: 'Are you sure you want to restore this category?',
+                text: 'This will restore the category',
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#28a745",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, Restore it!"
+            }).then((result)=>{
+                if(result.isConfirmed){
+                    showLoader();
+                    var id = $(this).data('id');
+                    var data = {
+                        id: id,
+                        type: 'restore'
+                    };
+                    var url = '{{route('admin.price-setting.restore')}}'
+                    $.post(url,data,function(response){
+                        if(response){
+                        if(response.type==="success"){
+                            showNotification(response.message,'success');
+                            RoomPriceTable.draw();
+                            hideLoader();
+                        }else{
+                            showNotification(response.message,'error');
+                            hideLoader();
+                        }
+                    }
+                })
+                }
+            })
         })
 
     })

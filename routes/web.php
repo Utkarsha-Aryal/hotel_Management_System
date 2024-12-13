@@ -210,6 +210,9 @@ Route::group(['middleware'=>'auth'],function(){
             Route::get('/',[SeasonController::class,'index'])->name('price-setting');
             Route::post('/tab',[SeasonController::class,'loadTab'])->name('price-setting.tab');
             Route::post('/save',[SeasonController::class,'save'])->name('price-setting.save');
+            Route::post('/list',[SeasonController::class,'list'])->name('price-setting.list');
+            Route::post('/delete',[SeasonController::class,'delete'])->name('price-setting.delete');
+            Route::post('/restore',[SeasonController::class,'restore'])->name('price-setting.restore');
         });
        
     });

@@ -14,15 +14,12 @@ class RoomCategory extends Model
     public function category()
     {
         return $this->hasOne(related: OurRooom::class)->where('status', 'Y');
-
     }
 
     public static function saveData($post)
     {
-
         try
         {
-
            $insertArray = [
             'category' => $post['category'],
             'order_number'=> $post['order'],

@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seasons', function (Blueprint $table) {
+        Schema::create('room_prices', function (Blueprint $table) {
             $table->id();
-            $table->string("name")->nullable();
-            $table->integer('order_number')->nullable();
-            $table->string("start_date")->nullabe();
-            $table->string("end_date")->nullable();
-            $table->enum("status",['Y','N'])->default('Y');
+            $table->foreignId('category_id')->constrained('room_categories','id');
+            $table->foreignId('season_id')->constrained('seasons','id');
+            $table->decimal('price',10,2);
+            $table->enum('status',['Y','N'])->default('Y');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('seasons');
+        Schema::dropIfExists('room_prices');
     }
 };
