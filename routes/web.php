@@ -209,7 +209,7 @@ Route::group(['middleware'=>'auth'],function(){
         Route::group(['prefix'=>'price-setting'],function(){
             Route::get('/',[SeasonController::class,'index'])->name('price-setting');
             Route::post('/tab',[SeasonController::class,'loadTab'])->name('price-setting.tab');
-
+            Route::post('/save',[SeasonController::class,'save'])->name('price-setting.save');
         });
        
     });
