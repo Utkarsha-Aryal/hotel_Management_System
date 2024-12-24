@@ -11,8 +11,8 @@ use App\Models\Common;
 
 class OurRoom extends Model
 {
-    use HasFactory;
 
+    use HasFactory;
     public function roomCategory()
     {
         return $this->belongsTo(RoomCategory::class,'category_id');

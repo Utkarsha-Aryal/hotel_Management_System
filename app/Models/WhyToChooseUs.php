@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 class WhyToChooseUs extends Model
 {
     use HasFactory;
-
     // getlist 
     public static function getlist($post)
     {

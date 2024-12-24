@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Session;
 
 class ForgetPassword extends Model
 {
-    protected $table = 'users';
 
+    protected $table = 'users';
     public static function checkRegisteredEmail($post)
     {
         try {
@@ -45,6 +45,7 @@ class ForgetPassword extends Model
         }
     }
 
+    
     public static function updateData($post)
     {
         try {

@@ -93,6 +93,7 @@ class OurValue extends Model
         }
     }
 
+
     public static function deleteData($post)
     {
         try {
@@ -123,6 +124,7 @@ class OurValue extends Model
         }
     }
 
+    
     public static function restoreData($post)
     {
         try {

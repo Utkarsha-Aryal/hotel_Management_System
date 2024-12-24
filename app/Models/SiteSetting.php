@@ -12,8 +12,9 @@ use Illuminate\Support\Facades\Storage;
 
 class SiteSetting extends Model
 {
-    use HasFactory;
 
+    
+    use HasFactory;
     public static function updatedata($post)
     {
         try {

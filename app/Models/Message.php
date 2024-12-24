@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
+
     use HasFactory;
     public static function saveData($post)
     {
@@ -101,6 +102,7 @@ class Message extends Model
         }
     }
 
+    
     public static function restoreData($post)
     {
         try {

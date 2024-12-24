@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Faq extends Model
 {
     use HasFactory;
+
     public function faqCategory()
     {
         return $this->belongsTo(FaqCategory::class, 'faq_category_id');
@@ -118,6 +119,7 @@ class Faq extends Model
         }
     }
 
+    
     public static function restoreData($post)
     {
         try {

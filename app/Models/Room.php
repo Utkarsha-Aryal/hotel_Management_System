@@ -16,16 +16,17 @@ class Room extends Model
         return $this->belongsTo(RoomCategory::class,'category_id');
     }
 
+
     public function postedBy()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+
     public static function saveData($post)
     {
         try
         {
-          
             $roomExists = Room::where('room_no',$post['room_no'])->where('status','Y')->where('id','!=',$post['id']??null)->exists();
             if($roomExists){
                 throw new Exception('This room no is already taken by some other room',1);
@@ -64,6 +65,7 @@ class Room extends Model
 
     }
 
+
     public static function getlist($post)
     {
         try {
@@ -101,6 +103,7 @@ class Room extends Model
         }
     }
 
+
     public static function restoreData($post)
     {
         try{
@@ -117,6 +120,7 @@ class Room extends Model
         }
     }
 
+
     public static function amnetieslist($post)
     {
         try {
@@ -128,6 +132,8 @@ class Room extends Model
         }
 
     }
+
+    
 public static function saveAmenities($post)
 {
     try {

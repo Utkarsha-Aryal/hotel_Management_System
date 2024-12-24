@@ -9,6 +9,7 @@ use Exception;
 
 class UserRole extends Model
 {
+
     protected $fillable = ['role_id', 'user_id'];
     public function user()
     {
@@ -19,7 +20,6 @@ class UserRole extends Model
     {
         return $this->belongsTo(Role::class, 'role_id');
     }
-
 
     public static function saveData($post){
         try {

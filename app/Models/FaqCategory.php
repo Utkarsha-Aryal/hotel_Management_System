@@ -113,6 +113,7 @@ class FaqCategory extends Model
         }
     }
 
+    
     public static function restoreData($post)
     {
         try {

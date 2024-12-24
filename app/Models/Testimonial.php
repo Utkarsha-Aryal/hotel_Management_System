@@ -10,8 +10,9 @@ use App\Models\Common;
 
 class Testimonial extends Model
 {
-    use HasFactory;
 
+
+    use HasFactory;
     public static function saveData($post)
     {
         try {
@@ -90,6 +91,7 @@ class Testimonial extends Model
         }
     }
 
+    
     public static function restoreData($post)
     {
         try {

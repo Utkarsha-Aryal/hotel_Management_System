@@ -107,6 +107,7 @@ class RoomCategory extends Model
         }
     }
 
+    
     public static function restoreData($post)
     {
         try {

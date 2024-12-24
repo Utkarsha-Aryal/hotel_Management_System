@@ -7,11 +7,13 @@ use Carbon\Carbon;
 use App\Models\RoomPrice;
 class Season extends Model
 {
+
     public function season()
     {
         return $this->hasOne(related: RoomPrice::class)->where('status', 'Y');
     }   
         
+
     public static function saveData($post)
     {
         try {
@@ -48,6 +50,7 @@ class Season extends Model
             throw $e;
         }
     }
+
 
     public static function getlist($post)
     {
@@ -96,6 +99,8 @@ class Season extends Model
             throw $e;
         }
     }
+
+    
     public static function restoreData($post)
     {
         try {

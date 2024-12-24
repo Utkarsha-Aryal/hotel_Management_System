@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Session;
 
 class OTP extends Model
 {
+    
     public static function checkOtp($post)
     {
         try {

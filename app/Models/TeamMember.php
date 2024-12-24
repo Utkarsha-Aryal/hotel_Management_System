@@ -10,8 +10,9 @@ use Exception;
 
 class TeamMember extends Model
 {
+
+
     use HasFactory;
-    
     public static function saveData($post)
     {
         try {
@@ -101,6 +102,7 @@ class TeamMember extends Model
         }
     }
 
+    
     public static function restoreData($post)
     {
         try {

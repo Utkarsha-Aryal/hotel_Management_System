@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 
 class Common extends Model
 {
+    
     public static function uploadFile($location, $file)
     {
         try {
@@ -29,6 +30,7 @@ class Common extends Model
             throw $e;
         }
     }
+
 
     public static function deleteDataFileDoesnotExists($post,$class)
     {
