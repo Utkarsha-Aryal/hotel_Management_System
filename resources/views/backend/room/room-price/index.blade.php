@@ -61,7 +61,7 @@
         window.loadingTab = true;
 
         $.ajax({
-            url: "{{route('admin.price-setting.tab')}}",
+            url: "{{route('admin.season-setting.tab')}}",
             type: "POST",
             data: {
                 _token: '{{ csrf_token() }}',

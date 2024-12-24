@@ -21,6 +21,7 @@ use App\Http\Controllers\backend\PostController;
 use App\Http\Controllers\backend\RoomController;
 use App\Http\Controllers\backend\RoomAmenitiesController;
 use App\Http\Controllers\backend\SeasonController;
+use App\Http\Controllers\backend\RoomPriceController;
 use App\Http\Controllers\TestController;
 
 
@@ -206,13 +207,21 @@ Route::group(['middleware'=>'auth'],function(){
 
         });
 
+        Route::group(['prefix'=>'season-setting'],function(){
+            Route::get('/',[SeasonController::class,'index'])->name('season-setting');
+            Route::post('/tab',[SeasonController::class,'loadTab'])->name('season-setting.tab');
+            Route::post('/save',[SeasonController::class,'save'])->name('season-setting.save');
+            Route::post('/list',[SeasonController::class,'list'])->name('season-setting.list');
+            Route::post('/delete',[SeasonController::class,'delete'])->name('season-setting.delete');
+            Route::post('/restore',[SeasonController::class,'restore'])->name('season-setting.restore');
+        });
+
+        /*RoomPrice setting starts fro  here*/
         Route::group(['prefix'=>'price-setting'],function(){
-            Route::get('/',[SeasonController::class,'index'])->name('price-setting');
-            Route::post('/tab',[SeasonController::class,'loadTab'])->name('price-setting.tab');
-            Route::post('/save',[SeasonController::class,'save'])->name('price-setting.save');
-            Route::post('/list',[SeasonController::class,'list'])->name('price-setting.list');
-            Route::post('/delete',[SeasonController::class,'delete'])->name('price-setting.delete');
-            Route::post('/restore',[SeasonController::class,'restore'])->name('price-setting.restore');
+            Route::post('/save',[RoomPriceController::class,'save'])->name('price-setting.save');
+            Route::post('/list',[RoomPriceController::class,'list'])->name('price-setting.list');
+            Route::post('/delete',[RoomPriceController::class,'delete'])->name('price-setting.delete');
+            Route::post('/restore',[RoomPriceController::class,'restore'])->name('price-setting.restore');
         });
        
     });

@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Exception;
 use Carbon\Carbon;
 use App\Models\OurRoom;
+use App\Models\RoomPrice;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
@@ -14,6 +15,10 @@ class RoomCategory extends Model
     public function category()
     {
         return $this->hasOne(related: OurRooom::class)->where('status', 'Y');
+    }
+
+    public function category2(){
+        return $this->hasOne(related:RoomPrice::class)->where('status','Y');
     }
 
     public static function saveData($post)

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('season_id')->constrained('seasons','id');
             $table->decimal('price',10,2);
             $table->enum('status',['Y','N'])->default('Y');
+            $table->integer('order_number')->nullable();
             $table->timestamps();
         });
     }

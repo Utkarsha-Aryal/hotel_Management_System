@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Season;
 use Illuminate\Support\Facades\DB;
 use App\Models\Common;
+use App\Models\RoomCategory;
 
 class SeasonController extends Controller
 {
@@ -21,7 +22,15 @@ class SeasonController extends Controller
             if($post['tab'] == 'season'){
                 return view('backend/room/room-price/room-season');
             }else if($post['tab'] == 'price_setting'){
-                return view('backend/room/room-price/room-price');
+                $season = Season::get();
+                $category = RoomCategory::get();
+                $data = [
+                    'category' => $category,
+                    'season' => $season,
+                    'type' => 'success',
+                    'message' => 'Successfully get data.'
+                ];
+                return view('backend/room/room-price/room-price',$data);
             }
         } catch(Exception $e){
 

@@ -47,7 +47,9 @@
     }
 
   
-
+.datepickss{
+    position: relative;
+}
     input#nepali-datepicker {
         width: 100% !important;
         height: 50% !important;
@@ -61,13 +63,17 @@
         border-radius: 0.2rem !important;
         border: 0.1px solid rgb(236, 231, 231);
         padding-left: 0.5rem !important;
+    }
+    #ndp-nepali-box {
+        top: 50px !important;
+        left: 10px !important;
     }
    
 </style>
 <div class="row">
         <div class="col-xl-4">
             <div class="card custom-card">
-                <form action="{{route('admin.price-setting.save')}}" method="POST" id="RoomPrice"
+                <form action="{{route('admin.season-setting.save')}}" method="POST" id="RoomPrice"
                     enctype="multipart/form-data">
                     <div class="card-body">
                         <div class="row gy-4">
@@ -85,11 +91,11 @@
                             </div>
                             <div class="col-xl-12 col-lg-6 col-md-6 col-sm-6 datepick">
                                 <label for="maximum occupancy" class="form-label">Start Date <span class="required-field">*</span></label>
-                                <input type="text" id="nepali-datepicker" name="start_date" class="form-control" placeholder="Select start date">
+                                <input type="text" id="nepali-datepicker-work-order" name="start_date" class="form-control" placeholder="Select start date">
                             </div>
-                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-6 datepick">
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-6 datepickss">
                                 <label for="maximum occupancy" class="form-label">End Date <span class="required-field">*</span></label>
-                                <input type="text" id="nepal" name="end_date" class="form-control nepali-datepicker" placeholder="Select end date">
+                                <input type="text" id="nepali-datepicker-work-completion" name="end_date" class="form-control nepali-datepicker" placeholder="Select end date">
                             </div>
                         </div>
                     </div>
@@ -121,7 +127,7 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 mb-3">
                                     <div class="dataTables_length" id="datatable-basic_length">
-                                        <table id="RoomPriceTable"
+                                        <table id="SeasonTable"
                                             class="table table-bordered text-nowrap w-100 dataTable no-footer mt-3"
                                             aria-describedby="datatable-basic_info">
                                             <thead>
@@ -148,27 +154,36 @@
 
 
 <script>
-        var RoomPriceTable; 
+        var SeasonTable; 
     $(document).ready(function(){
-        showDatePicker();
-        $('.nepali-datepicker').nepaliDatePicker();
+        // showDatePicker();
+        // $('.nepali-datepicker').nepaliDatePicker();
 
-                $('#nepali-datepicker').on('focus', function () {
-            $('#ndp-nepali-box').css({
-                'top': '60px',
-                'left': '10px',
-                'position': 'absolute' 
-            });
+        //         $('#nepali-datepicker').on('focus', function () {
+        //     $('#ndp-nepali-box').css({
+        //         'top': '60px',
+        //         'left': '10px',
+        //         'position': 'absolute' 
+        //     });
+        // });
+
+        // $('#nepal').on('focus', function () {
+        //     $('#ndp-nepali-box').css({
+        //         'top': '320px',
+        //         'left': '290px',
+        //         'position': 'absolute'
+        //     });
+
+            
+        // });
+
+        $("#nepali-datepicker-work-order").nepaliDatePicker({
+            container: ".datepick"
         });
-
-        $('#nepal').on('focus', function () {
-            $('#ndp-nepali-box').css({
-                'top': '320px',
-                'left': '290px',
-                'position': 'absolute'
-            });
+        $("#nepali-datepicker-work-completion").nepaliDatePicker({
+            container: ".datepickss"
         });
-
+        
         $('.saveData').off('click')
         $('.saveData').on('click',function(){
             console.log('clicked')
@@ -176,7 +191,7 @@
                 $('#RoomPrice').ajaxSubmit({
                     success: function(response){
                         if(response.type==='Success'){
-                            RoomPriceTable.draw();
+                            SeasonTable.draw();
                             $('.saveData').html('<i class="fa fa-save"></i> Save');
                             showNotification(response.message,'success');
                             $('#RoomPrice')[0].reset();
@@ -213,7 +228,7 @@
                 })
         })
 
-        RoomPriceTable = $('#RoomPriceTable').DataTable({
+        SeasonTable = $('#SeasonTable').DataTable({
             "sPaginationType": "full_numbers",
             "bSearchable": false,
             "lengthMenu":[
@@ -256,7 +271,7 @@
                     },
                 ],
                 "ajax": {
-                    "url": '{{route('admin.price-setting.list')}}',
+                    "url": '{{route('admin.season-setting.list')}}',
                     "type": "POST",
                     "data": function(d) {
                         var type = $('#trashed_file').is(':checked') == true ? 'trashed' :
@@ -306,7 +321,7 @@
 
         $('#trashed_file').off('change');
             $('#trashed_file').on('change', function(e) {
-                RoomPriceTable.draw();
+                SeasonTable.draw();
             });
 
         $(document).off('click','.deleteRoomCategory');
@@ -329,12 +344,12 @@
                         id: id,
                         type: type,
                     };
-                    var url = '{{route('admin.price-setting.delete')}}'
+                    var url = '{{route('admin.season-setting.delete')}}'
                     $.post(url,data,function(response){
                         if(response){
                             if(response.type==='success'){
                                 showNotification(response.message, response.type)
-                                RoomPriceTable.draw();
+                                SeasonTable.draw();
                                 hideLoader();
                             }else{
                                 showNotification(response.message,'error');
@@ -356,7 +371,7 @@
                 confirmButtonColor: "#28a745",
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Yes, Restore it!"
-            }).then((result)=>{
+            }).then((result)=>{ 
                 if(result.isConfirmed){
                     showLoader();
                     var id = $(this).data('id');
@@ -364,12 +379,12 @@
                         id: id,
                         type: 'restore'
                     };
-                    var url = '{{route('admin.price-setting.restore')}}'
+                    var url = '{{route('admin.season-setting.restore')}}'
                     $.post(url,data,function(response){
                         if(response){
                         if(response.type==="success"){
                             showNotification(response.message,'success');
-                            RoomPriceTable.draw();
+                            SeasonTable.draw();
                             hideLoader();
                         }else{
                             showNotification(response.message,'error');
