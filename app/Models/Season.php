@@ -21,6 +21,15 @@ class Season extends Model
                 'order_number' => $post['order'],
                 'end_date' => $post['end_date']
             ];
+
+            $startdate = new \DateTime($post['start_date']);
+            $enddate = new \DateTime($post['end_date']);
+            if($enddate<$startdate){
+                throw new Exception("End date can not be earlier than start date");
+            }else if($enddate==$startdate){
+                throw new Exception("End date and start date cannot be in the same day");
+            }
+
             $insertArray = filterData($insertArray);
             if(!empty($post['id'])){
                 $insertArray['updated_at'] = Carbon::now();

@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\backend;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use Illuminate\Support\Facades\DB;
 use App\Models\RoomCategory;
+use App\Http\Requests\RoomAmenitiesRequest;
 
 class RoomAmenitiesController extends Controller
 {
@@ -14,8 +14,7 @@ class RoomAmenitiesController extends Controller
         return view('backend.room.room-collection.index');
     }
 
-
-    // load the two tabs 
+    // load the two tabs tabs switch is done here
     public function loadTab(Request $request)
     {
         try {
@@ -38,7 +37,6 @@ class RoomAmenitiesController extends Controller
     }
 
     // load the list of our-rooms table
-
     public function list(Request $request)
     {
         try
@@ -51,9 +49,7 @@ class RoomAmenitiesController extends Controller
         }
     }
 
-    // save
-
-    public function save(Request $request)
+    public function save(RoomAmenitiesRequest $request)
     {
         try {
             $post = $request->all();
@@ -81,6 +77,5 @@ class RoomAmenitiesController extends Controller
         }
         return response()->json(['type' => $type, 'message' => $message]);
     }
-
 
 }

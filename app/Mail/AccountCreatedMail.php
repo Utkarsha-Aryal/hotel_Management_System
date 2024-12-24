@@ -34,7 +34,6 @@ class AccountCreatedMail extends Mailable
      public function build()
     {
         return $this->markdown('backend.emails.account-created-mail');
-        //C:\xampp\htdocs\auth\resources\views\backend\emails\account-created-mail.blade.php
     }
    
 }

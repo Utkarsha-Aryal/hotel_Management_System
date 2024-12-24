@@ -8,6 +8,7 @@ use App\Models\Season;
 use Illuminate\Support\Facades\DB;
 use App\Models\Common;
 use App\Models\RoomCategory;
+use App\Http\Requests\SeasonRequest;
 
 class SeasonController extends Controller
 {
@@ -37,7 +38,7 @@ class SeasonController extends Controller
         }
     }
 
-    public function save(Request $request)
+    public function save(SeasonRequest $request)
     {
         try {
             $post = $request ->all();
