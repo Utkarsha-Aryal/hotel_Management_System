@@ -146,7 +146,7 @@
                                                     <th>Category Name</th>
                                                     <th>Season Name</th>
                                                     <th>Order</th>
-                                                    <th>price</th>
+                                                    <th style="text-align: right !important;">price</th>
                                                     <th>Action</th>
                                             </thead>
                                             <tbody>
@@ -167,6 +167,7 @@
             $('.savePrice').off('click')
         $('.savePrice').on('click',function(){
             console.log('clicked')
+            if($('#RoomPrice').valid()){
                 showLoader();
                 $('#RoomPrice').ajaxSubmit({
                     success: function(response){
@@ -206,7 +207,8 @@
                     }
                 }
             })
-        })
+        }
+    })
         RoomPriceTable = $('#RoomPriceTable').DataTable({
             "sPaginationType": "full_numbers",
             "bSearchable": false,
@@ -243,7 +245,10 @@
                         "data":'order'
                     },
                     {
-                        "data":'price'
+                        "data":'price',
+                        "render": function(data,type,row){
+                            return `<span style="text-align: right !important; display: block;">${data}</span>`;
+                        }
                     },
                     {
                         "data": "action"
@@ -358,5 +363,37 @@
                 }
             })
         })
-    });
+        $('#RoomPrice').validate({
+            rules:{
+                category_id : 'required',
+                season_id:"required",
+                price: 'required',
+                order:'required',
+            },
+            messages: {
+        category_id: {
+        required: "Select a category"
+    },
+    season_id: {
+        required: "Select a season"
+    },
+    order: {
+        required: "The order number field is required."
+    },
+    price: {
+        required: "Please enter the price"
+    },
+ 
+
+},
+highlight: function(element) {
+                $(element).addClass('border-danger')
+            },
+            unhighlight: function(element) {
+                $(element).removeClass('border-danger')
+            },
+        })
+
+
+    }); 
     </script>

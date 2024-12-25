@@ -5,11 +5,12 @@ use App\Models\RoomCategory;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RoomPrice;
+use App\Http\Requests\RoomPriceRequest;
 use Illuminate\Support\Facades\DB;
 use App\Models\Common;
 class RoomPriceController extends Controller
 {  
-    public function save(Request $request)
+    public function save(RoomPriceRequest $request)
     {
         try {
             $post = $request ->all();
