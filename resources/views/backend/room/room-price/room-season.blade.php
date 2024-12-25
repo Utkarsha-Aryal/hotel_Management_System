@@ -156,27 +156,6 @@
 <script>
         var SeasonTable; 
     $(document).ready(function(){
-        // showDatePicker();
-        // $('.nepali-datepicker').nepaliDatePicker();
-
-        //         $('#nepali-datepicker').on('focus', function () {
-        //     $('#ndp-nepali-box').css({
-        //         'top': '60px',
-        //         'left': '10px',
-        //         'position': 'absolute' 
-        //     });
-        // });
-
-        // $('#nepal').on('focus', function () {
-        //     $('#ndp-nepali-box').css({
-        //         'top': '320px',
-        //         'left': '290px',
-        //         'position': 'absolute'
-        //     });
-
-            
-        // });
-
         $("#nepali-datepicker-work-order").nepaliDatePicker({
             container: ".datepick"
         });
@@ -184,9 +163,42 @@
             container: ".datepickss"
         });
         
+        $('#RoomPrice').validate({
+            rules:{
+                Season_Name:'required',
+                order:'required',
+                start_date:'required',
+                end_date:'required'
+            },
+            messages: {
+                Season_Name:{
+                    required: "Please enter the season name"
+                },
+                order:{
+                    required: "Please enter the order number"
+                },
+                start_date:{
+                    required: "Please enter when the season starts"
+                },
+                end_date:{
+                    required: "Please enter when the season ends"
+                }
+            },
+            highlight: function(element) {
+                $(element).addClass('border-danger')
+            },
+            unhighlight: function(element) {
+                $(element).removeClass('border-danger')
+            },
+        })
+
+
+
+
         $('.saveData').off('click')
         $('.saveData').on('click',function(){
             console.log('clicked')
+            if($('#RoomPrice').valid()){
                 showLoader();
                 $('#RoomPrice').ajaxSubmit({
                     success: function(response){
@@ -225,8 +237,9 @@
                         showNotification(response ? response.message : 'An error occurred', 'error');
                     }
                 }
-                })
-        })
+            })
+        }
+    })
 
         SeasonTable = $('#SeasonTable').DataTable({
             "sPaginationType": "full_numbers",

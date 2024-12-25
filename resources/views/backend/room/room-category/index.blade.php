@@ -318,10 +318,7 @@ highlight: function(element) {
                 $(element).removeClass('border-danger')
             },
         })
-
-
-
-
+        
         // Edit Program
         $(document).off('click','.editRoomCategory');
         $(document).on('click','.editRoomCategory',function(){

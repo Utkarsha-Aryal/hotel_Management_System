@@ -74,7 +74,7 @@
                         <div class="row gy-4">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                             <select class="form-select category " aria-label="Default select example" id="Category" name="category_id">
-                         <option value="">Select Category </option>
+                         <option value="">Select  Room Category </option>
                              @foreach ($category as $roomcategory)
                        <option value="{{ $roomcategory->id }}" 
                                 ${selectedCategory == '{{ $roomcategory->id }}' ? 'selected' : ''}>
@@ -85,7 +85,7 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                             <select class="form-select season " aria-label="Default select example" id="season" name="season_id">
-                         <option value="">Select Category </option>
+                         <option value="">Select Season </option>
                              @foreach ($season as $seasoncategory)
                        <option value="{{ $seasoncategory->id }}" 
                                 ${selectedCategory == '{{ $seasoncategory->id }}' ? 'selected' : ''}>
