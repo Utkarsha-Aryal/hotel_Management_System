@@ -17,19 +17,45 @@ class Season extends Model
     public static function saveData($post)
     {
         try {
+
             $insertArray = [
                 'name' => $post['Season_Name'],
                 'start_date' => $post['start_date'],
                 'order_number' => $post['order'],
                 'end_date' => $post['end_date']
             ];
-
+            $excludeId = $post['id'];
+            // this block of code checks whether the enddate is earlier than startdate
             $startdate = new \DateTime($post['start_date']);
             $enddate = new \DateTime($post['end_date']);
+
             if($enddate<$startdate){
                 throw new Exception("End date can not be earlier than start date");
             }else if($enddate==$startdate){
                 throw new Exception("End date and start date cannot be in the same day");
+            }
+
+            // this checks if the category name is uniqe or not and it let the category name pass in the edit case
+            $categorynameExists = Season::where('name',$post['Season_Name'])->where('status','Y')->where('id','!=',$post['id']??null)->exists();
+            if($categorynameExists){
+                throw new Exception("The category name is already taken");
+            }
+
+            //This gets all the start and end date of the season except for the data whose id is given
+            $seasons = Season::select('start_date', 'end_date') ->where('id', '!=', $excludeId)->get();
+            $newStartDate = $post['start_date'];
+            $newEndDate = $post['end_date'];
+            
+            $newStart = strtotime($newStartDate);
+            $newEnd = strtotime($newEndDate);
+
+            //this iteration iterates all the date from the season and sets in the function for the comaprison
+             foreach ($seasons as $season) {
+                $existingStart = strtotime($season->start_date);
+                $existingEnd = strtotime($season->end_date);
+                if ($newStart <= $existingEnd && $newEnd >= $existingStart) {
+                    throw new Exception("The given date range overlaps with an existing season.");
+                }
             }
 
             $insertArray = filterData($insertArray);
