@@ -22,8 +22,7 @@ use App\Http\Controllers\backend\RoomController;
 use App\Http\Controllers\backend\RoomAmenitiesController;
 use App\Http\Controllers\backend\SeasonController;
 use App\Http\Controllers\backend\RoomPriceController;
-use App\Http\Controllers\TestController;
-
+use App\Http\Controllers\frontend\ContactUsController;
 
 Route::get('/login',[AuthManagerController::class,'login'])->name('login');
 Route::post('/login',[AuthManagerController::class,'loginPost'])->name('login.post');
@@ -227,3 +226,11 @@ Route::group(['middleware'=>'auth'],function(){
     });
 });
 
+
+/* Frontend starts here*/
+
+Route::group(['prefix'=>'contact'],function(){
+    Route::get('/',[ContactUsController::class,'index'])->name('comtact');
+    Route::post('/save',[ContactUsController::class,'save'])->name('contact.save');
+
+});
