@@ -7,15 +7,26 @@ use Illuminate\Http\Request;
 
 class ContactUsController extends Controller
 {
-    public static function index()
+    public function index()
     {
         return view('frontend.contact');
     }
 
-    public static function save(Request $request)
+    public function save(Request $request)
     {
-        $post = $request->all();
-        
+        try
+        {
 
+        $post = $request->all();
+        $type = 'success';
+        $message = 'Records saved sucessfully';
+        DB::beginTransaction();
+
+        }catch(Exception $e){
+            DB::rollBack();
+            $type = "error";
+            $message = $e->getMessage();
+        }
+        return response()->json(['type'=>$type,'message'=>$message]);
     }
 }
