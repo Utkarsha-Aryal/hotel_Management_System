@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('contact_us', function (Blueprint $table) {
             $table->id();
+            $table->string('fullname')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->text('message')->nullable();
+            $table->enum('contacted_or_not', ['Y', 'N'])->default('N');
+            $table->enum('status', ['Y', 'N'])->default('Y');
             $table->timestamps();
         });
     }
