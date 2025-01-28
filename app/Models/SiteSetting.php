@@ -62,18 +62,17 @@ class SiteSetting extends Model
     public static function singleImageUpload($file, $type)
     {
         try {
-            $folder = 'setting'; // Relative folder path within the storage directory
-
-            // Ensure the directory exists or create it
-            $storagePath = storage_path('app/public/' . $folder);            
-            if (!Storage::exists($storagePath)) {
-                Storage::makeDirectory($storagePath, 0775, true); // Ensure to create recursively
-                
+            $folder = 'setting'; // Relative folder path within storage
+            $disk = 'public'; // Define the storage disk
+    
+            // Ensure the directory exists
+            if (!Storage::disk($disk)->exists($folder)) {
+                Storage::disk($disk)->makeDirectory($folder, 0775, true);
             }
-
+    
             // Retrieve current data
             $data = SiteSetting::find(1);
-
+    
             // Determine which field and previous file to delete
             $previousFile = null;
             if ($type == 'logo') {
@@ -81,27 +80,31 @@ class SiteSetting extends Model
             } elseif ($type == 'favicon') {
                 $previousFile = $data->img_favicon;
             }
+    
             // Delete previous file if it exists
-            if (file_exists($storagePath . '/'.$previousFile)) {
-                unlink($storagePath . '/' . $previousFile);
+            if ($previousFile && Storage::disk($disk)->exists($folder . '/' . $previousFile)) {
+                Storage::disk($disk)->delete($folder . '/' . $previousFile);
             }
-
-            // Upload new file
+    
+            // Validate the file extension
             $extension = $file->getClientOriginalExtension();
-            if (!in_array($extension, ['png', 'jpg', 'jpeg'])) {
-                throw new Exception('File format is not matched, upload in list (PNG/JPG/JPEG)', 1);
+            $allowedExtensions = ['png', 'jpg', 'jpeg'];
+            if (!in_array(strtolower($extension), $allowedExtensions)) {
+                throw new Exception('Invalid file format. Allowed formats: PNG, JPG, JPEG.');
             }
-
+    
+            // Generate a unique name for the new file
             $tempName = Str::random(30) . '-' . time() . '.' . $extension;
-            $storeFile = $file->storeAs( $folder, $tempName,'public');
-
-            if (empty($storeFile)) {
-                return false;
+    
+            // Store the file
+            $storeFile = $file->storeAs($folder, $tempName, $disk);
+            if (!$storeFile) {
+                throw new Exception('Failed to upload the file.');
             }
-
-            return $tempName;
+    
+            return $tempName; // Return the new file name
         } catch (Exception $e) {
-            throw $e;
+            throw $e; // Rethrow the exception for higher-level handling
         }
     }
 

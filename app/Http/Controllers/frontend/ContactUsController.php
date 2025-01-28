@@ -6,16 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ContactUs;
 use App\Models\SiteSetting;
+use App\Http\Requests\ControllerRequest;
 
 class ContactUsController extends Controller
 {
     public function index()
     {
-        $linkMap = SiteSetting::value('link_map');
-        return view('frontend.contact',['linkMap'=>$linkMap]);
+        return view('frontend.contact.contact');
     }
 
-    public function save(Request $request)
+    public function save(ControllerRequest $request)
     {
         try
         {

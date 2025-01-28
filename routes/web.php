@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\frontend\FHomeController;
 use App\Http\Controllers\backend\AuthManagerController;
 use App\Http\Controllers\backend\HomeController;
 use App\Http\Controllers\backend\UserAccountController;
@@ -24,7 +25,6 @@ use App\Http\Controllers\backend\SeasonController;
 use App\Http\Controllers\backend\RoomPriceController;
 use App\Http\Controllers\backend\BackendContactUsController;
 use App\Http\Controllers\frontend\ContactUsController;
-
 Route::get('/login',[AuthManagerController::class,'login'])->name('login');
 Route::post('/login',[AuthManagerController::class,'loginPost'])->name('login.post');
 Route::get('/logout',[AuthManagerController::class,'logout']);
@@ -236,6 +236,10 @@ Route::group(['middleware'=>'auth'],function(){
 
 
 /* Frontend starts here*/
+Route::group(['prefix'=>'home'],function(){
+    Route::get('/',[FHomeController::class,'index'])->name('home');
+
+});
 
 Route::group(['prefix'=>'contact'],function(){
     Route::get('/',[ContactUsController::class,'index'])->name('comtact');
