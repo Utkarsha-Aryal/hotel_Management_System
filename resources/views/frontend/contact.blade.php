@@ -82,6 +82,7 @@
                </div>
             </div>
          </div>
+         <div id="customNotification" class="custom-notification"></div>
       </div>
    </header>
    <!-- Banner Section -->
@@ -125,7 +126,7 @@
             <div class="col-md-6">
                <div class="map_main">
                   <div class="map-responsive">
-                     <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2777.017648781283!2d85.33038864228291!3d27.683763288955074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sen!2snp!4v1735206315710!5m2!1sen!2snp" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                     <iframe src= "{{$linkMap}}" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                   </div>
                </div>
             </div>
@@ -191,17 +192,51 @@
    <script src="{{ asset('frontpanel/assets/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
    <script src="{{ asset('frontpanel/assets/js/custom.js') }}"></script>
    <script>
-      $(document).ready(function(){
-         // send data from contact us
-         $('.send_btn').off('click')
-         $('.send_btn').on('click',function(){
-            console.log('clicked')
-            $('#contactus').ajaxSubmit({
+   function showNotification(message, type) {
+      var notification = document.getElementById('customNotification');
+      notification.innerHTML = message.replace(/\n/g, '<br>');
+      notification.style.backgroundColor = type === 'success' ? '#28a745' : '#dc3545';
+      notification.style.display = 'block';
+      setTimeout(function () {
+         notification.style.display = 'none';
+      }, 3000);
+   }
 
-            })
-         })
-      })
+   $(document).ready(function () {
+      // Intercept form submission
+      $('#contactus').on('submit', function (e) {
+         e.preventDefault(); // Prevent default form submission
 
+         // Use AJAX to send the form data
+         $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: new FormData(this), // Form data
+            contentType: false,       // Required for file uploads
+            processData: false,       // Prevent jQuery from processing the data
+            success: function (response) {
+               if (response.type === 'success') {
+                  showNotification(response.message, 'success');
+                  $('#contactus')[0].reset();
+               } else {
+                  showNotification(response.message, 'error');
+               }
+            },
+            error: function (xhr) {
+               if (xhr.responseJSON && xhr.responseJSON.errors) {
+                  let errorMessages = '';
+                  $.each(xhr.responseJSON.errors, function (key, value) {
+                     errorMessages += value[0] + '\n'; // Collect validation errors
+                  });
+                  showNotification(errorMessages, 'error');
+               } else {
+                  showNotification('An unexpected error occurred.', 'error');
+               }
+            }
+         });
+      });
+   });
 </script>
+
 </body>
 </html>

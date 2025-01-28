@@ -154,5 +154,17 @@ class Common extends Model
     //     }
     //     return $post;
     // }
+// Delete without image
+    public static function deleteData($post, $class)
+    {
+        try {
 
+            if (!$class::where(['id' => $post['id']])->update(['status' => 'N'])) {
+                throw new Exception("Couldn't Delete Data. Please try again", 1);
+            }
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
 }

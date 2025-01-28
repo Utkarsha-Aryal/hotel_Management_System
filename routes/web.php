@@ -22,6 +22,7 @@ use App\Http\Controllers\backend\RoomController;
 use App\Http\Controllers\backend\RoomAmenitiesController;
 use App\Http\Controllers\backend\SeasonController;
 use App\Http\Controllers\backend\RoomPriceController;
+use App\Http\Controllers\backend\BackendContactUsController;
 use App\Http\Controllers\frontend\ContactUsController;
 
 Route::get('/login',[AuthManagerController::class,'login'])->name('login');
@@ -221,6 +222,13 @@ Route::group(['middleware'=>'auth'],function(){
             Route::post('/list',[RoomPriceController::class,'list'])->name('price-setting.list');
             Route::post('/delete',[RoomPriceController::class,'delete'])->name('price-setting.delete');
             Route::post('/restore',[RoomPriceController::class,'restore'])->name('price-setting.restore');
+        });
+
+        Route::group(['prefix'=>"contact"],function(){
+            Route::get("/",[BackendContactUsController::class,'index'])->name('contact');
+            Route::post('/list',[BackendContactUsController::class,'list'])->name('contact.list');
+            Route::post('/delete',[BackendContactUsController::class,'delete'])->name('contact.delete');
+
         });
        
     });
