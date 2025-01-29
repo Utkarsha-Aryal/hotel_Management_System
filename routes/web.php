@@ -253,6 +253,9 @@ Route::group(['prefix'=>'about'],function(){
 
 Route::group(['prefix'=>'ourroom'],function(){
     Route::get('/',[FOurRoomController::class,'index'])->name('ourroom');
+    Route::post('/view',[FOurRoomController::class,'view'])->name('ourroom.view');
+
+
 
 });
 

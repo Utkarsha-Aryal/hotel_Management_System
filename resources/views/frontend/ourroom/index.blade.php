@@ -1,9 +1,20 @@
 @extends('frontend.layouts.main')
 
 @section('title')
-ourroom
+Our Rooms
 @endsection 
   @section('main-content')
+
+     <!-- Modal -->
+     <div class="modal fade" id="testimonialModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                {{-- Content goes here --}}
+            </div>
+        </div>
+    </div>
+
       <div class="back_re">
          <div class="container">
             <div class="row">
@@ -35,7 +46,8 @@ ourroom
                </figure>
             </div>
             <div class="bed_room">
-               <h3>{{ $room->category }}</h3>
+            <span style="display:none;" class="room-id">{{$room->id}}</span> <!-- Added a class to the span for easier targeting -->
+            <h3>{{ $room->category }}</h3>
                <p>{{ Str::limit($room->bed_type, 100) }}<br>
                   Maximum Occupancy : {{$room->maximum_occupancy}}
                </p> <!-- Limit description to 100 chars -->
@@ -47,6 +59,38 @@ ourroom
 
          </div>
       </div>
+      <script>
+ $(document).off('click', '.room');
+ 
+ $(document).on('click', '.room', function() {
+     var id = $(this).find('.room-id').text();  // Get the room id
+     var url = '{{ route('ourroom.view') }}';  // URL for the route
+     var data = { id: id };  // Data to be sent
+
+     // Get the CSRF token from the meta tag
+     var csrfToken = $('meta[name="csrf-token"]').attr('content');
+     
+     // Send the POST request with the CSRF token in the headers
+     $.ajax({
+         url: url,
+         type: 'POST',
+         data: data,
+         headers: {
+             'X-CSRF-TOKEN': csrfToken  // Include the CSRF token in the request header
+         },
+         success: function(response) {
+             // Insert the response into the modal content
+             $('#testimonialModal .modal-content').html(response);
+             // Show the modal
+             $('#testimonialModal').modal('show');
+         },
+         error: function(xhr, status, error) {
+             console.log('Error: ' + error);
+         }
+     });
+ });
+</script>
+
       @endsection
 
      
