@@ -25,6 +25,11 @@ use App\Http\Controllers\backend\SeasonController;
 use App\Http\Controllers\backend\RoomPriceController;
 use App\Http\Controllers\backend\BackendContactUsController;
 use App\Http\Controllers\frontend\ContactUsController;
+use App\Http\Controllers\frontend\FAboutController;
+use App\Http\Controllers\frontend\FOurRoomController;
+use App\Http\Controllers\frontend\FBlogController;
+use App\Http\Controllers\frontend\FGalleryController;
+
 Route::get('/login',[AuthManagerController::class,'login'])->name('login');
 Route::post('/login',[AuthManagerController::class,'loginPost'])->name('login.post');
 Route::get('/logout',[AuthManagerController::class,'logout']);
@@ -238,6 +243,26 @@ Route::group(['middleware'=>'auth'],function(){
 /* Frontend starts here*/
 Route::group(['prefix'=>'home'],function(){
     Route::get('/',[FHomeController::class,'index'])->name('home');
+
+});
+
+Route::group(['prefix'=>'about'],function(){
+    Route::get('/',[FAboutController::class,'index'])->name('about');
+
+});
+
+Route::group(['prefix'=>'ourroom'],function(){
+    Route::get('/',[FOurRoomController::class,'index'])->name('ourroom');
+
+});
+
+Route::group(['prefix'=>'blog'],function(){
+    Route::get('/',[FBlogController::class,'index'])->name('blog');
+
+});
+
+Route::group(['prefix'=>'gallery'],function(){
+    Route::get('/',[FGalleryController::class,'index'])->name('gallery');
 
 });
 
