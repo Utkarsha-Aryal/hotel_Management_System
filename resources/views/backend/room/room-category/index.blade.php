@@ -287,7 +287,12 @@
                 category : 'required',
                 bed_type:"required",
                 maximum_occupancy: 'required',
-                image:'required',
+                image:{
+                    required: function() {
+                        var id = $('#id').val();
+                        return id === '';
+                    }
+                },
                 order:'required'
             },
             messages: {
