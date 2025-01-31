@@ -24,6 +24,8 @@ use App\Http\Controllers\backend\RoomAmenitiesController;
 use App\Http\Controllers\backend\SeasonController;
 use App\Http\Controllers\backend\RoomPriceController;
 use App\Http\Controllers\backend\BackendContactUsController;
+use App\Http\Controllers\backend\GalleryController;
+use App\Http\Controllers\backend\GalleryImageController;
 use App\Http\Controllers\frontend\ContactUsController;
 use App\Http\Controllers\frontend\FAboutController;
 use App\Http\Controllers\frontend\FOurRoomController;
@@ -235,7 +237,20 @@ Route::group(['middleware'=>'auth'],function(){
             Route::post('/delete',[BackendContactUsController::class,'delete'])->name('contact.delete');
 
         });
-       
+
+        Route::group(['prefix'=>'gallery'],function(){
+            Route::get('/',[GalleryController::class,'index'])->name('gallery');
+            Route::post('/save',[GalleryController::class,'save'])->name('gallery.save');
+            Route::post('/list',[GalleryController::class,'list'])->name('gallery.list');
+            Route::post('/delete',[GalleryController::class,'delete'])->name('gallery.delete');
+            Route::group(['prefix' => 'image'], function () {
+                Route::post('/', [GalleryImageController::class, 'index'])->name('gallery.image.index');
+                Route::post('/save', [GalleryImageController::class, 'save'])->name('gallery.image.save');
+                Route::post('/list', [GalleryImageController::class, 'list'])->name('gallery.image.list');
+                Route::post('/delete', [GalleryImageController::class, 'delete'])->name('gallery.image.delete');
+            });
+
+        });
     });
 });
 
@@ -266,6 +281,7 @@ Route::group(['prefix'=>'blog'],function(){
 
 Route::group(['prefix'=>'gallery'],function(){
     Route::get('/',[FGalleryController::class,'index'])->name('gallery');
+    Route::get('/gallery/{slug}', [FGalleryController::class, 'show'])->name('gallery.show');
 
 });
 
