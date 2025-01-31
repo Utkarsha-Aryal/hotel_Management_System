@@ -32,7 +32,8 @@ Our Rooms
             <div class="row">
                <div class="col-md-12">
                   <div class="titlepage">
-                     <p  class="margin_0">Lorem Ipsum available, but the majority have suffered </p>
+                     <p  class="margin_0">Life  </p>
+
                   </div>
                </div>
             </div>
@@ -63,9 +64,16 @@ Our Rooms
  $(document).off('click', '.room');
  
  $(document).on('click', '.room', function() {
+   const today = new Date();
+        const hours = today.getHours();
+        const minutes = today.getMinutes();
+        const currentTime =`${hours}h:${minutes}min`
+        const formattedDate = today.toISOString().split('T')[0]
+        const nepalidate = NepaliFunctions.AD2BS(formattedDate);
+
      var id = $(this).find('.room-id').text();  // Get the room id
      var url = '{{ route('ourroom.view') }}';  // URL for the route
-     var data = { id: id };  // Data to be sent
+     var data = { id: id, nepali_date: nepalidate};  // Data to be sent
 
      // Get the CSRF token from the meta tag
      var csrfToken = $('meta[name="csrf-token"]').attr('content');

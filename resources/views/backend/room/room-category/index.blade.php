@@ -342,10 +342,10 @@ highlight: function(element) {
                 $('#RoomCategory ._image').attr('src', image);
             if ($('#id').val()) {
                 $('.saveData').removeClass('btn-success').addClass('btn-primary').html(
-                     '<i class="fa fa-save"></i> Update Program');
+                     '<i class="fa fa-save"></i> Update ');
                 } else {
                     $('.saveData').removeClass('btn-primary').addClass('btn-success').html(
-                     '<i class="fa fa-save"></i> Create Program');
+                     '<i class="fa fa-save"></i> Create ');
                 }
         });
         // view trashed items-start

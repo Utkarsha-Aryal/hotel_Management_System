@@ -35,7 +35,15 @@
                 <p class="text-muted">
                     <strong>Bed Type:</strong> {{ $roomcategoryDetails->bed_type }}
                 </p>
+
+                <p class="text-muted">
+                    <strong>Price:</strong> {{ @$prices->price }}
+                </p>
             </div>
         </div>
     </div>
 @endif
+
+<script>
+
+</script>

@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             UserRoleSeeder::class,
             SiteSettingSeeder::class,
             AboutUsSeeder::class,
+            SeasonSeeder::class
         ]);
 
 
