@@ -1,7 +1,19 @@
 @extends('frontend.layouts.main')
+<style>
+   #image{
+      height:300px; 
+      object-fit:cover;
+   }
+   .gallery_img p {
+        text-align: center;
+        margin-top: 10px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+</style>
 
 @section('title')
-Blog
+Gallery
 @endsection 
   @section('main-content')
       <div  class="gallery">
@@ -14,47 +26,20 @@ Blog
                </div>
             </div>
             <div class="row">
-               <div class="col-md-3 col-sm-6">
-                  <div class="gallery_img">
-                     <figure><img src="{{ asset('frontpanel/assets/images/gallery1.jpg')}}" alt="#"/></figure>
+               @foreach ($data as $item)
+                  <div class="col-md-3 col-sm-6">
+                        <div class="gallery_img">
+                        <figure>
+                           <a href="{{ route('gallery.show', $item->slug) }}">
+                                 <img id="image" src="{{ asset('storage/gallery-image/' . @$item['image']) }}" alt="Gallery Image" />
+                           </a>
+                        </figure>
+                           <p>{{ $item->name }}</p>
+                        </div>
                   </div>
-               </div>
-               <div class="col-md-3 col-sm-6">
-                  <div class="gallery_img">
-                     <figure><img src="{{ asset('frontpanel/assets/images/gallery2.jpg')}}" alt="#"/></figure>
-                  </div>
-               </div>
-               <div class="col-md-3 col-sm-6">
-                  <div class="gallery_img">
-                     <figure><img src="{{ asset('frontpanel/assets/images/gallery3.jpg')}}" alt="#"/></figure>
-                  </div>
-               </div>
-               <div class="col-md-3 col-sm-6">
-                  <div class="gallery_img">
-                     <figure><img src="{{ asset('frontpanel/assets/images/gallery4.jpg')}}" alt="#"/></figure>
-                  </div>
-               </div>
-               <div class="col-md-3 col-sm-6">
-                  <div class="gallery_img">
-                     <figure><img src="{{ asset('frontpanel/assets/images/gallery5.jpg')}}" alt="#"/></figure>
-                  </div>
-               </div>
-               <div class="col-md-3 col-sm-6">
-                  <div class="gallery_img">
-                     <figure><img src="{{ asset('frontpanel/assets/images/gallery6.jpg')}}" alt="#"/></figure>
-                  </div>
-               </div>
-               <div class="col-md-3 col-sm-6">
-                  <div class="gallery_img">
-                     <figure><img src="{{ asset('frontpanel/assets/images/gallery7.jpg')}}" alt="#"/></figure>
-                  </div>
-               </div>
-               <div class="col-md-3 col-sm-6">
-                  <div class="gallery_img">
-                     <figure><img src="{{ asset('frontpanel/assets/images/gallery8.jpg')}}" alt="#"/></figure>
-                  </div>
-               </div>
+               @endforeach
             </div>
+
          </div>
       </div>
  @endsection

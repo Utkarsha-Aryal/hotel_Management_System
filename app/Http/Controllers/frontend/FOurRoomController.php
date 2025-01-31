@@ -49,9 +49,6 @@ class FOurRoomController extends Controller
                     ->first();
                 }
             }
-
-            
-            
             $data = [
                 'roomcategoryDetails' => $roomcategoryDetails,
 

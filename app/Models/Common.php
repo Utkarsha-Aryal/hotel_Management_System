@@ -125,6 +125,25 @@ class Common extends Model
         }
     }
 
+     //upload cropped image
+     public static function uploadCroppedImage($location, $file)
+     {
+         try {
+             if (!empty($file)) {
+                 $image_parts = explode(";base64,", $file);
+                 $image_base64 = base64_decode($image_parts[1]);
+                 $imageName = Str::random(30) . '-' . time() . '.png';
+                 $storeFile = Storage::disk('public')->put($location . '/' . $imageName, $image_base64);
+             }
+             if (empty($storeFile))
+                 return false;
+ 
+             return $imageName;
+         } catch (Exception $e) {
+             throw $e;
+         }
+     }
+
     // public static function filterData($post)
     // {
     //     foreach ($post as $key=>$data)
