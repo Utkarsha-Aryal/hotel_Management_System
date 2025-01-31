@@ -23,12 +23,18 @@ class RoomCategoryRequest extends FormRequest
      */
     public function rules(Request $request): array
     {
-        return [
+        $post = $request->all();
+        $rules = [
             'category'=> 'required|min:3|max:255',
             'order'=>'required|numeric|min:1|max_digits:5',
-            'image'=>'required|mimes:jpg,jpeg,png|max:512',
-            'bed_type' => 'required|in:Single Bed,Double Bed,Queen Bed,King Bed,Twin Beds',
+            'bed_type' => 'required|in:Single Bed,Double Bed,Queen Bed,King Bed,Twin Bed',
         ];
+        if ($post['id'] == null) {
+            $rules['image'] = 'required|mimes:jpg,jpeg,png|max:512';
+        } else {
+            $rules['image'] = 'nullable|mimes:jpg,jpeg,png|max:512';
+        }
+        return $rules;
     }
 
     public function messages()

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("name")->nullable();
             $table->integer('order_number')->nullable();
-            $table->string("start_date")->nullabe();
+            $table->string("start_date")->nullable();
             $table->string("end_date")->nullable();
             $table->enum("status",['Y','N'])->default('Y');
             $table->timestamps();

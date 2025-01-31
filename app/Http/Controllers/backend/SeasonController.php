@@ -81,6 +81,18 @@ class SeasonController extends Controller
             unset($data['totalrecs']);
             foreach($data as $row)
             {
+                if($row->id == 1){
+                    $array[$i]['sno']=$i +1;
+                    $array[$i]['season_name'] = $row->name;
+                    $array[$i]['order'] = $row->order_number;
+                    $array[$i]['start_date'] = $row->start_date;
+                    $array[$i]['end_date'] = $row->end_date;
+                    $action ="";
+                    $array[$i]["action"]  = $action;
+
+                }else{
+
+                
                 $array[$i]['sno']=$i +1;
                 $array[$i]['season_name'] = $row->name;
                 $array[$i]['order'] = $row->order_number;
@@ -96,6 +108,7 @@ class SeasonController extends Controller
                 $action .= ' <a href="javascript:;" class="deleteRoomCategory" name="Delete Data" data-id="' . $row->id . '"><i class="fa fa-trash text-danger"></i></a>';
                 $array[$i]["action"]  = $action;
                 $i++;
+            }
             }
             if (!$filtereddata) $filtereddata = 0;
             if (!$totalrecs) $totalrecs = 0;

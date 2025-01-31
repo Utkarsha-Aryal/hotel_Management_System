@@ -23,13 +23,20 @@ About us
             <div class="row">
                <div class="col-md-5">
                   <div class="titlepage">
-                     <p class="margin_0">The passage experienced a surge in popularity during the 1960s when Letraset used it on their dry-transfer sheets, and again during the 90s as desktop publishers bundled the text with their software. Today it's seen all around the web; on templates, websites, and stock designs. Use our generator to get your own, or read on for the authoritative history of lorem ipsum. </p>
+                     <p class="margin_0"> {{@$data->introduction}} </p>
                      <a class="read_more" href="Javascript:void(0)"> Read More</a>
                   </div>
                </div>
                <div class="col-md-7">
                   <div class="about_img">
-                     <figure><img src="{{ asset('frontpanel/assets/images/about.png')}}" alt="#"/></figure>
+                  @if (!empty($data['img_introduction']))
+                                          <figure><img alt=""src={{ asset('/storage/aboutus') . '/' . @$data['img_introduction'] }}
+                                            alt="img" id="img_introduction"></figure>
+                                    @else
+                                    <figure><img src="{{ asset('/images/no-image.jpg') }}" alt="Default Image"
+                                            id="img_introduction"></figure>
+                                    @endif
+                     
                   </div>
                </div>
             </div>
