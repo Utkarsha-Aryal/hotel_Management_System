@@ -5,6 +5,30 @@
 Home
 @endsection 
   @section('main-content')
+  <style>
+     
+.datepickss{
+    position: relative;
+}
+    input#nepali-datepicker {
+        width: 100% !important;
+        height: 50% !important;
+        border-radius: 0.2rem !important;
+        border: 0.1px solid rgb(236, 231, 231);
+        padding-left: 0.5rem !important;
+    }
+    input#nepali-datepicker {
+        width: 100% !important;
+        height: 50% !important;
+        border-radius: 0.2rem !important;
+        border: 0.1px solid rgb(236, 231, 231);
+        padding-left: 0.5rem !important;
+    }
+    #ndp-nepali-box {
+        top: 50px !important;
+        left: 10px !important;
+    }
+  </style>
       <!-- end header inner -->
       <!-- end header -->
       <!-- banner -->
@@ -44,21 +68,30 @@ Home
                   <div class="col-md-5">
                      <div class="book_room">
                         <h1>Book a Room Online</h1>
-                        <form class="book_now">
+                        <form id="book_now" action = "{{route('booknow')}}" method = "POST"  enctype="multipart/form-data" >
+                           @csrf
                            <div class="row">
-                              <div class="col-md-12">
+                              <div class="col-md-12 datepick">
                                  <span>Arrival</span>
-                                 <img class="date_cua" src="{{ asset('frontpanel/assets/images/date.png')}}">
-                                 <input class="online_book" placeholder="dd/mm/yyyy" type="date" name="dd/mm/yyyy">
-                              </div>
-                              <div class="col-md-12">
+                                 <!-- <img class="date_cua" src="{{ asset('frontpanel/assets/images/date.png')}}"> -->
+                                 <input type="text" id="nepali-datepicker-work-order" name="start_date" class="form-control" placeholder="Select start date">
+                                 </div>
+                              <div class="col-md-12 datepickss">
                                  <span>Departure</span>
-                                 <img class="date_cua" src="{{ asset('frontpanel/assets/images/date.png')}}">
-                                 <input class="online_book" placeholder="dd/mm/yyyy" type="date" name="dd/mm/yyyy">
-                              </div>
+                                 <!-- <img class="date_cua" src="{{ asset('frontpanel/assets/images/date.png')}}"> -->
+                                 <input type="text" id="nepali-datepicker-work-completion" name="end_date" class="form-control nepali-datepicker" placeholder="Select end date">
+                                 </div>
                               <div class="col-md-12">
-                                 <button class="book_btn">Book Now</button>
+                                 <button class="book_btn" type="submit">Book Now</button>
                               </div>
+                              <!--   <div class="col-xl-12 col-lg-6 col-md-6 col-sm-6 datepick">
+                                <label for="maximum occupancy" class="form-label">Start Date <span class="required-field">*</span></label>
+                                <input type="text" id="nepali-datepicker-work-order" name="start_date" class="form-control" placeholder="Select start date">
+                            </div>
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-6 datepickss">
+                                <label for="maximum occupancy" class="form-label">End Date <span class="required-field">*</span></label>
+                                <input type="text" id="nepali-datepicker-work-completion" name="end_date" class="form-control nepali-datepicker" placeholder="Select end date">
+                            </div> -->
                            </div>
                         </form>
                      </div>
@@ -276,6 +309,50 @@ Home
             </div>
          </div>
       </div>
-      <!-- end blog -->
-      <!--  contact -->
+      <script>
+         $(document).ready(function(){
+        $("#nepali-datepicker-work-order").nepaliDatePicker({
+            container: ".datepick"
+        });
+
+        $("#nepali-datepicker-work-completion").nepaliDatePicker({
+            container: ".datepickss"
+        });
+
+        $('#book_btn').on('submit', function (e) {
+         e.preventDefault(); // Prevent default form submission
+
+         // Use AJAX to send the form data
+         $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: new FormData(this), // Form data
+            contentType: false,       // Required for file uploads
+            processData: false,       // Prevent jQuery from processing the data
+            success: function (response) {
+               if (response.type === 'success') {
+                  showNotification(response.message, 'success');
+                  $('#book_now')[0].reset();
+               } else {
+                  showNotification(response.message, 'error');
+               }
+            },
+            error: function (xhr) {
+               if (xhr.responseJSON && xhr.responseJSON.errors) {
+                  let errorMessages = '';
+                  $.each(xhr.responseJSON.errors, function (key, value) {
+                     errorMessages += value[0] + '\n'; // Collect validation errors
+                  });
+                  showNotification(errorMessages, 'error');
+               } else {
+                  showNotification('An unexpected error occurred.', 'error');
+               }
+            }
+         });
+      });
+
+
+      })
+
+      </script>
   @endsection
