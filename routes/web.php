@@ -31,6 +31,7 @@ use App\Http\Controllers\frontend\FAboutController;
 use App\Http\Controllers\frontend\FOurRoomController;
 use App\Http\Controllers\frontend\FBlogController;
 use App\Http\Controllers\frontend\FGalleryController;
+use App\Http\Controllers\frontend\BlookingController;
 
 Route::get('/login',[AuthManagerController::class,'login'])->name('login');
 Route::post('/login',[AuthManagerController::class,'loginPost'])->name('login.post');
@@ -289,4 +290,11 @@ Route::group(['prefix'=>'contact'],function(){
     Route::get('/',[ContactUsController::class,'index'])->name('comtact');
     Route::post('/save',[ContactUsController::class,'save'])->name('contact.save');
 
+});
+
+Route::group(['prefix'=>'booknow'],function(){
+    Route::post('/',[BlookingController::class,'index'])->name('booknow');
+    Route::post('/view',[BlookingController::class,'view'])->name('booknow.view');
+    Route::post('/form',[BlookingController::class,'form'])->name('booknow.form');
+    Route::post('/save',[BlookingController::class,'save'])->name('booknow.save');
 });
