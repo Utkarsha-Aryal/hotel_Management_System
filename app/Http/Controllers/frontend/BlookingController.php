@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Season;
 use App\Models\RoomPrice;
+use App\Models\Booking;
 
 class BlookingController extends Controller
 {
@@ -24,6 +25,7 @@ class BlookingController extends Controller
         $category = $post["category"];
 ;        return view('frontend.booking.form',["category"=>$category]);
     }
+
 
     public function view(Request $request ){
         try {
@@ -74,6 +76,7 @@ class BlookingController extends Controller
         return view('frontend.booking.view',$data);
     }
 
+
     public function save(Request $request)
     {
         try
@@ -82,7 +85,7 @@ class BlookingController extends Controller
         $type = 'success';
         $message = 'Records saved sucessfully';
         DB::beginTransaction();
-        $result = ContactUs::saveData($post);
+        $result = Booking::saveData($post);
         if(!$result){
             throw new Exception('Could not save record',1);
         }
